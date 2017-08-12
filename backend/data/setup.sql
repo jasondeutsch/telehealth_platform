@@ -1,9 +1,7 @@
 create table user_account(
   id            serial primary key,
   email         text,
-  password_hash text,
-  password_salt text,
-  is_disabled   bool,
+  disabled   bool,
   created_at    timestamp not null
 );
 

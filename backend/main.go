@@ -1,13 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 	"net/http"
-	"text/template"
 )
 
+// dummy route for testing client/server communication.
 func getS(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	w.Write([]byte("tomorrow"))
 }
@@ -17,6 +16,8 @@ func main() {
 
 	// Routes
 	router.GET("/string", getS)
+
+	router.POST("/signup", signup)
 
 	// Prefer white list domains with cors.New().Options({AllowedOrigins...})
 	cors := cors.Default().Handler(router)
