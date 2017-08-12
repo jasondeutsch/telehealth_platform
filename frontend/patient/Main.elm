@@ -1,7 +1,13 @@
 module Patient.Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (type_, placeholder)
+import Html.Attributes exposing ( class 
+                                , enctype
+                                , type_
+                                , method
+                                , name
+                                , placeholder
+                                , formaction )
 import Http
 
 
@@ -63,7 +69,7 @@ getNextAppointmentTime =
 
 view : Model -> Html msg
 view model = 
-    div [] [ signupForm
+    div [] [ div [ class "card"] [ signupForm ]
            , infoRow model.nextAppointmentTime 
            ]
 
@@ -83,9 +89,9 @@ pairedProviderInfo =
 -- Signup View
 
 signupForm = 
-    form [] 
-        [ input [ type_ "text", placeholder "Email" ] []
-        , input [ type_ "password", placeholder "password" ] [] 
+    form [ formaction (baseUrl ++ "signup"), method "POST", enctype "application/x-www-form-urlencoded" ] 
+        [ input [ type_ "text", placeholder "Email", name "Email"] []
+        , input [ type_ "password", placeholder "Password", name "Password" ] [] 
         , input [ type_ "submit", placeholder "signup" ] []
         ]
 

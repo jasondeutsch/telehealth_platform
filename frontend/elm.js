@@ -8918,55 +8918,6 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
-var _user$project$Patient_Main$signupForm = A2(
-	_elm_lang$html$Html$form,
-	{ctor: '[]'},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$input,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$type_('text'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$placeholder('Email'),
-					_1: {ctor: '[]'}
-				}
-			},
-			{ctor: '[]'}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$input,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$type_('password'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$placeholder('password'),
-						_1: {ctor: '[]'}
-					}
-				},
-				{ctor: '[]'}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$input,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$type_('submit'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$placeholder('signup'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {ctor: '[]'}
-			}
-		}
-	});
 var _user$project$Patient_Main$pairedProviderInfo = A2(
 	_elm_lang$html$Html$div,
 	{ctor: '[]'},
@@ -8999,13 +8950,95 @@ var _user$project$Patient_Main$infoRow = function (time) {
 			}
 		});
 };
+var _user$project$Patient_Main$baseUrl = 'http://localhost:8080/';
+var _user$project$Patient_Main$signupForm = A2(
+	_elm_lang$html$Html$form,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$formaction(
+			A2(_elm_lang$core$Basics_ops['++'], _user$project$Patient_Main$baseUrl, 'signup')),
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$method('POST'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$enctype('application/x-www-form-urlencoded'),
+				_1: {ctor: '[]'}
+			}
+		}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$input,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$type_('text'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$placeholder('Email'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$name('Email'),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			{ctor: '[]'}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('password'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$placeholder('Password'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$name('Password'),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$type_('submit'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$placeholder('signup'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
 var _user$project$Patient_Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _user$project$Patient_Main$signupForm,
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('card'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Patient_Main$signupForm,
+					_1: {ctor: '[]'}
+				}),
 			_1: {
 				ctor: '::',
 				_0: _user$project$Patient_Main$infoRow(model.nextAppointmentTime),
@@ -9013,7 +9046,6 @@ var _user$project$Patient_Main$view = function (model) {
 			}
 		});
 };
-var _user$project$Patient_Main$baseUrl = 'http://localhost:8080/';
 var _user$project$Patient_Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
@@ -9042,7 +9074,7 @@ var _user$project$Patient_Main$getNextAppointmentTime = A2(
 		A2(_elm_lang$core$Basics_ops['++'], _user$project$Patient_Main$baseUrl, 'string')));
 var _user$project$Patient_Main$init = {
 	ctor: '_Tuple2',
-	_0: {nextAppointmentTime: 'never'},
+	_0: {nextAppointmentTime: 'No Appointment Scheduled'},
 	_1: _user$project$Patient_Main$getNextAppointmentTime
 };
 var _user$project$Patient_Main$main = _elm_lang$html$Html$program(
