@@ -25,8 +25,8 @@ type Msg
 
 
 init : Model
-init = { email : ""
-       , password : ""
+init = { email = ""
+       , password = ""
        }
 
 
@@ -45,9 +45,9 @@ update msg model =
             (model, Cmd.none) 
         Signup (Err _) ->
             (model, Cmd.none)
-        SetCredentialEmail email ->
+        SetEmail email ->
             ({ model | email = email }, Cmd.none)
-        SetCredentialPassword pw ->
+        SetPassword pw ->
             ({ model | password = pw }, Cmd.none)
 
 

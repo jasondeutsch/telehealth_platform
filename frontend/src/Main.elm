@@ -2,7 +2,8 @@ module Main exposing (main)
 
 import Navigation exposing (Location)
 import UrlParser exposing (..)
-import Page.Signup exposing (Model)
+import Page.Signup
+import Html exposing (Html, text)
 
 
 -- Wires
@@ -10,7 +11,7 @@ import Page.Signup exposing (Model)
 
 
 main = 
-    Navigation.program 
+    Navigation.program OnLocationChange 
         { init = init
         , update = update
         , view = view
@@ -38,18 +39,27 @@ parseLocation location =
         Just route -> 
             route
 
-        Nothing
+        Nothing ->
             NotFoundR
 
 -- Model
 
+
 type alias Model = { location : Route 
+                   , signupModel : Page.Signup.Model
                    }
+
 
 type Msg
     = OnLocationChange Location 
+    | SignupMsg Page.Signup.Msg 
 
-init : (Model, Cmd Msg) 
+
+init : Navigation.Location -> (Model, Cmd Msg) 
+init location = 
+    ( { location = parseLocation location
+      , signupModel = Page.Signup.init
+      }, Cmd.none )
 
 
 
@@ -62,19 +72,21 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model = 
     case msg of
         OnLocationChange l ->
-            ( { model | location = parseLocation }, Cmd.none )
-
+            ( { model | location = parseLocation l }, Cmd.none )
+  
+        SignupMsg m ->
+            let 
+                (subMdl, subCmd) = Page.Signup.update m model.signupModel
+            in
+                { model | signupModel = subMdl }
+                   ! [ Cmd.map SignupMsg subCmd ] 
 
 -- View
 
 
 
 view : Model -> Html Msg
-view model = 
-    viewPage page
-
-viewPage : page -> Html Msg
-    case page of 
+view model = text "hello again"
         
 
 
