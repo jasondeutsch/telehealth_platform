@@ -1,8 +1,8 @@
 create table user_account(
   id            serial primary key,
   email         text,
-  disabled   bool,
-  created_at    timestamp not null
+  disabled      bool,
+  created_at    timestamp default current_timestamp
 );
 
 create table user_session(
@@ -25,14 +25,14 @@ create table patient(
   last_name   text not null,
   state       text not null,
   country     text not null,
-  created_at  timestamp not null
-);
+  created_at  timestamp default current_timestamp
+  );
 
 create table availability(
   id          serial primary key,
   start_time  timestamp not null,
   end_time    timestamp not null,
-  created_at  timestamp not null
+  created_at  timestamp default current_timestamp
 );
 
 create table appointment(
@@ -40,6 +40,6 @@ create table appointment(
   date       date not null,
   start_time time not null,
   end_time   time not null,
-  created_at timestamp not null
+  created_at timestamp default current_timestamp
 );
 
