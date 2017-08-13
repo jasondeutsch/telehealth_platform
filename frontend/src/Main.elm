@@ -2,13 +2,13 @@ module Patient.Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing ( class 
-                                , enctype
-                                , type_
-                                , method
                                 , name
                                 , placeholder
-                                , formaction )
+                                , type_
+                                )
+import Html.Events exposing (onInput)
 import Http
+import Json.Encode as JsonE
 
 
 
@@ -30,17 +30,26 @@ main =
 
 
 
-type alias Model = { nextAppointmentTime : String }
+type alias Model = { nextAppointmentTime : String 
+                   , email    : String
+                   , password : String 
+                   }
 
-type Msg = 
-    GetNextAppointmentTime (Result Http.Error String)
+type Msg  
+    = GetNextAppointmentTime (Result Http.Error String)
+    | SetCredentialEmail String
+    | SetCredentialPassword String
 
 init : (Model, Cmd Msg) 
-init = ({ nextAppointmentTime = "No Appointment Scheduled" }, getNextAppointmentTime)
+init = ({ nextAppointmentTime = "No Appointment Scheduled" 
+        , email = ""
+        , password = ""}, getNextAppointmentTime)
 
 
 
 -- Update
+
+
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
@@ -50,6 +59,11 @@ update msg model =
             ({ model | nextAppointmentTime = time }, Cmd.none)
         GetNextAppointmentTime (Err _) ->
             (model, Cmd.none )
+        SetCredentialEmail email ->
+            ({ model | email = email }, Cmd.none)
+        SetCredentialPassword pw ->
+            ({ model | password = pw }, Cmd.none)
+
             
 
 
@@ -59,6 +73,20 @@ update msg model =
 baseUrl : String
 baseUrl = "http://localhost:8080/"
 
+signupUri : String
+signupUri = "signup"
+
+{-
+signup email pw = 
+   let
+       json = JsonE.encode 0 [ ("Email", string email)
+                             , ("Password", string pw)
+                             ]
+   in
+       Http.send Signup <| Http.post (baseUrl ++ signupUri) json
+-}
+
+
 getNextAppointmentTime =
    Http.send GetNextAppointmentTime <| Http.getString (baseUrl ++ "string")
 
@@ -67,7 +95,8 @@ getNextAppointmentTime =
 -- View
 
 
-view : Model -> Html msg
+
+view : Model -> Html Msg
 view model = 
     div [] [ div [ class "card"] [ signupForm ]
            , infoRow model.nextAppointmentTime 
@@ -89,9 +118,9 @@ pairedProviderInfo =
 -- Signup View
 
 signupForm = 
-    form [ formaction (baseUrl ++ "signup"), method "POST", enctype "application/x-www-form-urlencoded" ] 
-        [ input [ type_ "text", placeholder "Email", name "Email"] []
-        , input [ type_ "password", placeholder "Password", name "Password" ] [] 
+    div [] 
+        [ input [ type_ "text", placeholder "Email" , onInput SetCredentialEmail ] []
+        , input [ type_ "password", placeholder "Password", onInput SetCredentialPassword ] [] 
         , input [ type_ "submit", placeholder "signup" ] []
         ]
 
