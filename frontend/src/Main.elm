@@ -6,9 +6,10 @@ import Html.Attributes exposing ( class
                                 , placeholder
                                 , type_
                                 )
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, onClick)
 import Http
 import Json.Encode as JsonE
+import Json.Decode as JsonD
 
 
 
@@ -37,6 +38,8 @@ type alias Model = { nextAppointmentTime : String
 
 type Msg  
     = GetNextAppointmentTime (Result Http.Error String)
+    | HandleSignup
+    | Signup (Result Http.Error String)
     | SetCredentialEmail String
     | SetCredentialPassword String
 
@@ -52,9 +55,15 @@ init = ({ nextAppointmentTime = "No Appointment Scheduled"
 
 
 
-update : Msg -> Model -> ( Model, Cmd msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model = 
     case msg of
+        HandleSignup ->
+            (model, signup model.email model.password)
+        Signup (Ok _) ->
+            (model, Cmd.none) 
+        Signup (Err _) ->
+            (model, Cmd.none)
         GetNextAppointmentTime (Ok time) ->
             ({ model | nextAppointmentTime = time }, Cmd.none)
         GetNextAppointmentTime (Err _) ->
@@ -63,6 +72,7 @@ update msg model =
             ({ model | email = email }, Cmd.none)
         SetCredentialPassword pw ->
             ({ model | password = pw }, Cmd.none)
+
 
             
 
@@ -76,15 +86,17 @@ baseUrl = "http://localhost:8080/"
 signupUri : String
 signupUri = "signup"
 
-{-
+
 signup email pw = 
    let
-       json = JsonE.encode 0 [ ("Email", string email)
-                             , ("Password", string pw)
-                             ]
+       url = baseUrl ++ signupUri
+       body = Http.jsonBody 
+                    <| JsonE.object [ ("Email", JsonE.string email)
+                                    , ("Password", JsonE.string pw)
+                                    ]
+       decoder = JsonD.string
    in
-       Http.send Signup <| Http.post (baseUrl ++ signupUri) json
--}
+       Http.send Signup <| Http.post url body decoder
 
 
 getNextAppointmentTime =
@@ -121,6 +133,6 @@ signupForm =
     div [] 
         [ input [ type_ "text", placeholder "Email" , onInput SetCredentialEmail ] []
         , input [ type_ "password", placeholder "Password", onInput SetCredentialPassword ] [] 
-        , input [ type_ "submit", placeholder "signup" ] []
+        , input [ type_ "submit", placeholder "signup", onClick HandleSignup ] []
         ]
 
