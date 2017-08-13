@@ -80,6 +80,9 @@ signup email pw =
 
 -- Signup View
 
+view : Model -> Html Msg
+view model = signupForm 
+
 signupForm : Html Msg
 signupForm = 
     div [] 

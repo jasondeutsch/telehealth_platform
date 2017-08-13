@@ -86,7 +86,16 @@ update msg model =
 
 
 view : Model -> Html Msg
-view model = text "hello again"
+view model = page model
+
+page : Model -> Html Msg
+page model =
+    case model.location of
+        SignupR -> 
+            Html.map SignupMsg <| Page.Signup.view model.signupModel
+
+        NotFoundR ->
+            text "404: Not found"
         
 
 
