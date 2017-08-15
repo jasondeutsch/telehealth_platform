@@ -1,26 +1,44 @@
 module Page.Patient.Dashboard exposing (..)
 
 
+import Html exposing (..)
+import Http
+
+
+
+-- Model & Messages
+
+
 type alias Model =
-    { nextAppointmentTime : String }
+    { nextApptTime : String }
 
 
 type Msg
-    = GetNextAppointmentTime (Result Http.Error String)
+    = GetNextApptTime
+    | NextApptTime (Result Http.Error String)
 
 
+init : Model
 init =
-    ( { nextAppointmentTime = "None Scheduled" }, getNextAppointmentTime )
+    { nextApptTime = ""  
+    }
+
+
+-- Update
+
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GetNextAppointmentTime (Ok time) ->
-            ( { model | nextAppointmentTime = time }, Cmd.none )
+       GetNextApptTime ->
+           (model, getNextApptTime)
 
-        GetNextAppointmentTime (Err _) ->
-            ( model, Cmd.none )
+       NextApptTime (Ok time) ->
+            ( { model | nextApptTime = time }, Cmd.none )
+
+       NextApptTime (Err _) ->
+           ( model, Cmd.none )
 
 
 
@@ -32,8 +50,9 @@ baseUrl =
     "http://localhost:8080/"
 
 
-getNextAppointmentTime =
-    Http.send GetNextAppointmentTime <| Http.getString (baseUrl ++ "string")
+
+getNextApptTime =
+    Http.send NextApptTime <| Http.getString (baseUrl ++ "string")
 
 
 
@@ -43,12 +62,14 @@ getNextAppointmentTime =
 view : Model -> Html Msg
 view model =
     div []
-        [ infoRow model.nextAppointmentTime
+        [ infoRow model.nextApptTime
         ]
 
 
 infoRow time =
-    div [] [ nextAppointmentInfo time, pairedProviderInfo ]
+    div [] 
+        [ nextAppointmentInfo time
+        , pairedProviderInfo ]
 
 
 nextAppointmentInfo : String -> Html msg

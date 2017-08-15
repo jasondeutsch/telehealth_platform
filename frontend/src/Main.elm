@@ -1,15 +1,15 @@
 module Main exposing (main)
 
 import Navigation exposing (Location)
-import UrlParser exposing (..)
-import Page.Signup
 import Html exposing (Html, text)
-
+import UrlParser exposing (..)
+import Page.Signup as Signup
+import Page.Patient.Dashboard as PatientDash
 
 -- Wires
 
 
-main =
+main  =
     Navigation.program OnLocationChange
         { init = init
         , update = update
@@ -25,12 +25,16 @@ main =
 type Route
     = NotFoundR
     | SignupR
+    | PatientDashboardR
 
+
+type SubMsg msg = Goto Route | Sub msg
 
 matchers : Parser (Route -> a) a
 matchers =
     oneOf
         [ map SignupR (s "signup")
+        , map PatientDashboardR (s "dashboard")
         ]
 
 
@@ -50,57 +54,107 @@ parseLocation location =
 
 type alias Model =
     { location : Route
-    , signupModel : Page.Signup.Model
+    , signupModel : Signup.Model
+    , patientDashModel : PatientDash.Model
     }
 
 
 type Msg
     = OnLocationChange Location
-    | SignupMsg Page.Signup.Msg
+    | SignupMsg Signup.Msg
+    | PatientDashMsg PatientDash.Msg
+
+
 
 
 init : Navigation.Location -> ( Model, Cmd Msg )
 init location =
-    ( { location = parseLocation location
-      , signupModel = Page.Signup.init
-      }
-    , Cmd.none
-    )
+     { location = parseLocation location
+     , signupModel = Signup.init
+     , patientDashModel = PatientDash.init
+     }
+       ! [Cmd.none] 
+    
+
 
 
 
 -- Update
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+{-| 
+   The challenge in updating nested features is more apparent when a subview
+   requires a command as it is rendered in a way not entirely distinct from 
+   React's "ComponentDidMount".
+
+   In the case of Page.Patient.Dashboard the `case parseLocation location of` 
+   cathces the `OnLocationChange` for PatientDashboardR and runs the needed
+   command.
+
+   Future refactoring to to provide an abstraction of this is advised.
+   Perhaps as Evancz suggested `type Submsg msg = Goto Route | Sub msg`. 
+-} 
+
+
+update :  Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnLocationChange l ->
-            ( { model | location = parseLocation l }, Cmd.none )
+       OnLocationChange location ->
+            case parseLocation location of 
+                PatientDashboardR ->
+                    let
+                        ( subMdl, subCmd ) =
+                             PatientDash.update 
+                                 PatientDash.GetNextApptTime model.patientDashModel
 
-        SignupMsg m ->
+                    in
+                        { model | location = parseLocation location
+                                , patientDashModel = subMdl }
+                                      ! [ Cmd.map PatientDashMsg subCmd ]          
+
+
+                _ ->
+                     ( { model | location = parseLocation location }, Cmd.none )
+
+       SignupMsg m ->
             let
                 ( subMdl, subCmd ) =
-                    Page.Signup.update m model.signupModel
+                    Signup.update m model.signupModel
             in
                 { model | signupModel = subMdl }
                     ! [ Cmd.map SignupMsg subCmd ]
+
+       PatientDashMsg m ->
+            let
+                ( subMdl, subCmd ) =
+                    PatientDash.update m model.patientDashModel
+            in
+                { model | patientDashModel = subMdl }
+                    ! [ Cmd.map PatientDashMsg subCmd ] 
+
 
 
 
 -- View
 
 
+
 view : Model -> Html Msg
 view model =
-    page model
+    page model 
 
 
 page : Model -> Html Msg
 page model =
     case model.location of
         SignupR ->
-            Html.map SignupMsg <| Page.Signup.view model.signupModel
+            Signup.view model.signupModel
+                |> Html.map SignupMsg 
+
+        PatientDashboardR ->
+            PatientDash.view model.patientDashModel
+                |> Html.map PatientDashMsg
 
         NotFoundR ->
             text "404: Not found"
+
