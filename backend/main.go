@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 	"net/http"
@@ -8,6 +9,7 @@ import (
 
 // dummy route for testing client/server communication.
 func getS(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	fmt.Println("works")
 	w.Write([]byte("tomorrow"))
 }
 
