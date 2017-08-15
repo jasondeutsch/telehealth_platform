@@ -11,7 +11,7 @@ import Page.Patient.Dashboard as PatientDash
 
 main  =
     Navigation.program OnLocationChange
-        { init = init
+        { init = init 
         , update = update
         , view = view
         , subscriptions = (\_ -> Sub.none)
@@ -28,7 +28,8 @@ type Route
     | PatientDashboardR
 
 
-type SubMsg msg = Goto Route | Sub msg
+-- TODO remove or use me.
+-- type SubMsg msg = Goto Route | Sub msg
 
 matchers : Parser (Route -> a) a
 matchers =
@@ -99,8 +100,11 @@ init location =
 update :  Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+
        OnLocationChange location ->
+       
             case parseLocation location of 
+
                 PatientDashboardR ->
                     let
                         ( subMdl, subCmd ) =
