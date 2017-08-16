@@ -13,19 +13,51 @@ type User struct {
 }
 
 type Session struct {
-	Id           int
-	UserId       int
-	LoginTime    time.Time
-	LastSeenTime time.Time
+	Id        int
+	UserId    int
+	LoginTime time.Time
 }
 
 // Create a new session for an existing user.
+func (user *User) CreateSession() (session Session, err error) {
+	statement := "insert into user_session (user_id, login_time) values($1, $2)"
+	stmt, err := Db.Prepare(statement)
+
+	if err != nil {
+		return
+	}
+
+	defer stmt.Close()
+
+	err = stmt.QueryRow(&session.UserId, time.Now()).Scan(&session.Id)
+
+	return
+}
 
 // Retrieve a sesion.
+func (user *User) Session() (session Session, err error) {
+	session = Session{}
+
+	err = Db.QueryRow("select id, user_id, login_time from user_session where user_id = $1", user.Id).Scan(&session.Id, &session.UserId, &session.LoginTime)
+
+	return
+}
 
 // Check if session is valid.
 
 // Delete session
+func (session *Session) DeleteByUserId() (err error) {
+	statement := "delete from user_session where id = $1"
+	stmt, err := Db.Prepare(statement)
+
+	if err != nil {
+		return
+	}
+
+	stmt.Close()
+
+	return
+}
 
 // Create a new user
 // and save it to DB.
@@ -38,7 +70,6 @@ func (user *User) Create() (err error) {
 	}
 	defer stmt.Close()
 
-	// return a row and scan it into User struct
 	err = stmt.QueryRow(user.Email, Encrypt(user.Password), false, time.Now()).Scan(&user.Id)
 
 	return
@@ -47,7 +78,7 @@ func (user *User) Create() (err error) {
 // Get user by email
 func UserByEmail(email string) (user User, err error) {
 	user = User{}
-	statement := "select id, email, disabled, created_at from user_account where id=$1"
+	statement := "select id, email, disabled, created_at from user_account where id= $1"
 	err = Db.QueryRow(statement, email).Scan(&user.Id, &user.Email, &user.Disabled, &user.CreatedAt)
 
 	return

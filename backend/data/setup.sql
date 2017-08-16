@@ -10,7 +10,6 @@ create table user_session(
   id             serial primary key, 
   user_id        int references user_account(id),
   login_time     timestamp not null,
-  last_seen_time timestamp not null
 );
 
 create table provider(
