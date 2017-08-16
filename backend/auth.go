@@ -63,7 +63,6 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 // POST
 // /signup
 func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-
 	var user *data.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
