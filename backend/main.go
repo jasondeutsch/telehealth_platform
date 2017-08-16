@@ -1,16 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 	"net/http"
 )
 
 func main() {
+	loadConfig()
 	router := httprouter.New()
 
 	// Routes
-
 	router.POST("/signup", signup)
 	router.POST("/auth", authenticate)
 	router.POST("/logout", logout)
@@ -19,8 +20,9 @@ func main() {
 	cors := cors.Default().Handler(router)
 
 	server := &http.Server{
-		Addr:    "0.0.0.0:8080",
+		Addr:    config.Address,
 		Handler: cors,
 	}
+	fmt.Println("Listening on port " + config.Address)
 	server.ListenAndServe()
 }
