@@ -1,6 +1,7 @@
 create table user_account(
   id            serial primary key,
   email         text,
+  password      text, 
   disabled      bool,
   created_at    timestamp default current_timestamp
 );

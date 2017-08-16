@@ -10,12 +10,13 @@ import (
 
 var Db *sql.DB
 
-func main() {
+func init() {
 	var err error
-	Db, err = sql.Open("postgres", "dbname=previ-app, sslmode=disable")
+	Db, err = sql.Open("postgres", "dbname=telehealth-app sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("db open")
 	return
 }
 
