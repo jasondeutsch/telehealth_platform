@@ -34,17 +34,13 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	user, err := data.UserByEmail(currentRequest.Email)
 
 	if err != nil {
-		fmt.Println("user by email error")
 		http.Error(w, err.Error(), 400)
 	}
-
-	w.Header().Set("Content-Type", "application/json")
 
 	fmt.Println(user.Password)
 
 	if user.Password == data.Encrypt(currentRequest.Password) {
 
-		fmt.Println("Password match!")
 		_, err := user.CreateSession()
 		if err != nil {
 			// do stuff
@@ -59,7 +55,6 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	} else {
 
-		fmt.Println("Password is not a match!")
 		w.Write([]byte("not authorized\n"))
 	}
 
