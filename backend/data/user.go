@@ -46,7 +46,7 @@ func (user *User) Session() (session Session, err error) {
 // Check if session is valid.
 
 // Delete session
-func (session *Session) DeleteByUserId() (err error) {
+func (session *Session) Delete() (err error) {
 	statement := "delete from user_session where id = $1"
 	stmt, err := Db.Prepare(statement)
 
@@ -54,7 +54,9 @@ func (session *Session) DeleteByUserId() (err error) {
 		return
 	}
 
-	stmt.Close()
+	defer stmt.Close()
+
+	_, err = stmt.Exec(session.Id)
 
 	return
 }
@@ -78,8 +80,8 @@ func (user *User) Create() (err error) {
 // Get user by email
 func UserByEmail(email string) (user User, err error) {
 	user = User{}
-	statement := "select id, email, disabled, created_at from user_account where id= $1"
-	err = Db.QueryRow(statement, email).Scan(&user.Id, &user.Email, &user.Disabled, &user.CreatedAt)
+	statement := "select id, email, password, disabled, created_at from user_account where email = $1"
+	err = Db.QueryRow(statement, email).Scan(&user.Id, &user.Email, &user.Password, &user.Disabled, &user.CreatedAt)
 
 	return
 
