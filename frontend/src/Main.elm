@@ -4,6 +4,7 @@ import Navigation exposing (Location)
 import Html exposing (Html, text)
 import UrlParser exposing (..)
 import Page.Signup as Signup
+import Page.Login as Login
 import Page.Patient.Dashboard as PatientDash
 
 -- Wires
@@ -25,6 +26,7 @@ main  =
 type Route
     = NotFoundR
     | SignupR
+    | LoginR
     | PatientDashboardR
 
 
@@ -35,6 +37,7 @@ matchers : Parser (Route -> a) a
 matchers =
     oneOf
         [ map SignupR (s "signup")
+        , map LoginR (s "login")
         , map PatientDashboardR (s "dashboard")
         ]
 
@@ -56,6 +59,7 @@ parseLocation location =
 type alias Model =
     { location : Route
     , signupModel : Signup.Model
+    , loginModel : Login.Model
     , patientDashModel : PatientDash.Model
     }
 
@@ -63,6 +67,7 @@ type alias Model =
 type Msg
     = OnLocationChange Location
     | SignupMsg Signup.Msg
+    | LoginMsg Login.Msg
     | PatientDashMsg PatientDash.Msg
 
 
@@ -72,6 +77,7 @@ init : Navigation.Location -> ( Model, Cmd Msg )
 init location =
      { location = parseLocation location
      , signupModel = Signup.init
+     , loginModel = Login.init
      , patientDashModel = PatientDash.init
      }
        ! [Cmd.none] 
@@ -94,6 +100,8 @@ init location =
 
    Future refactoring to to provide an abstraction of this is advised.
    Perhaps as Evancz suggested `type Submsg msg = Goto Route | Sub msg`. 
+
+
 -} 
 
 
@@ -128,6 +136,14 @@ update msg model =
                 { model | signupModel = subMdl }
                     ! [ Cmd.map SignupMsg subCmd ]
 
+       LoginMsg m ->
+            let 
+                ( subMdl, subCmd ) = 
+                    Login.update m model.loginModel
+            in
+                { model | loginModel = subMdl }
+                    ! [ Cmd.map LoginMsg subCmd ]
+
        PatientDashMsg m ->
             let
                 ( subMdl, subCmd ) =
@@ -151,6 +167,9 @@ view model =
 page : Model -> Html Msg
 page model =
     case model.location of
+        LoginR ->
+            Login.view model.loginModel
+                |> Html.map LoginMsg
         SignupR ->
             Signup.view model.signupModel
                 |> Html.map SignupMsg 

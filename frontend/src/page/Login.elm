@@ -1,4 +1,4 @@
-module Page.Signup exposing (..)
+module Page.Login exposing (..)
 
 import Html exposing (..)
 import Html.Attributes
@@ -15,44 +15,40 @@ import Json.Encode as JsonE
 import Json.Decode as JsonD
 
 
--- As noted in Login.elm, both modules are so similiar 
--- that either abstraction or lifting into top level may be appropriate.
+-- Signup and Login are so similiar, perhaps a user construct should be
+-- brought to the top level.
 
-
-type alias Model =
-    { email : String
-    , password : String
+type alias Model = 
+    { email : Email
+    , password : Password
     }
 
+type alias Email = String
+type alias Password = String
 
 type Msg
-    = HandleSignup
-    | Signup (Result Http.Error String)
-    | SetEmail String
-    | SetPassword String
-
+    = HandleLogin
+    | LoginResult (Result Http.Error String)
+    | SetEmail Email
+    | SetPassword Password
 
 init : Model
-init =
+init = 
     { email = ""
     , password = ""
     }
 
 
-
--- Update
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        HandleSignup ->
-            ( model, signup model.email model.password )
+        HandleLogin ->
+           ( model , login model.email model.password ) 
 
-        Signup (Ok _) ->
+        LoginResult (Ok _) ->
             ( model, Cmd.none )
 
-        Signup (Err _) ->
+        LoginResult (Err _) ->
             ( model, Cmd.none )
 
         SetEmail email ->
@@ -65,46 +61,44 @@ update msg model =
 
 -- Server API
 
-
 baseUrl : String
 baseUrl =
     "http://localhost:8080/"
 
 
-signupUri : String
-signupUri =
-    "signup"
+loginUri : String
+loginUri =
+    "login"
 
 
-signup email pw =
+login : Email -> Password -> Cmd Msg 
+login e p =
     let
         url =
-            baseUrl ++ signupUri
+            baseUrl ++ loginUri
 
         body =
             Http.jsonBody <|
                 JsonE.object
-                    [ ( "email", JsonE.string email )
-                    , ( "password", JsonE.string pw )
+                    [ ( "email", JsonE.string e )
+                    , ( "password", JsonE.string p )
                     ]
 
         decoder =
             JsonD.string
     in
-        Http.send Signup <| Http.post url body decoder
+        Http.send LoginResult <| Http.post url body decoder
 
 
 
--- Signup View
-
+-- View
 
 view : Model -> Html Msg
-view model =
-    signupForm
+view model = loginForm
+    
 
-
-signupForm : Html Msg
-signupForm =
+loginForm : Html Msg
+loginForm =
     div []
         [ input
             [ type_ "text"
@@ -120,8 +114,8 @@ signupForm =
             []
         , input
             [ type_ "submit"
-            , value "Signup"
-            , onClick HandleSignup
+            , value "Login"
+            , onClick HandleLogin
             ]
             []
-        ]
+        ] 
