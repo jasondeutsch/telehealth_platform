@@ -2,10 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/jasondeutsch/previ/backend/data"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 type Configuration struct {
@@ -36,12 +38,14 @@ func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err err
 		// no session, send user to login
 	}
 
-	sess = data.Session{Id: cookie.Value}
+	cookieValue, _ := strconv.Atoi(cookie.Value)
+
+	sess = data.Session{Id: cookieValue}
 
 	ok, _ := sess.Check()
 
 	if !ok {
-		err = errors.New("Invalid Session")
+		errors.New("Session invalid")
 	}
 
 	return

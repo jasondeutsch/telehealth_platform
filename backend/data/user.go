@@ -97,6 +97,15 @@ func UserByEmail(email string) (user User, err error) {
 	return
 }
 
+// Get user by ID
+func UserById(id int) (user User, err error) {
+	user = User{}
+	statement := "select id, email, disabled from user_account where id = $1"
+	err = Db.QueryRow(statement, id).Scan(&user.Id, &user.Email, &user.Disabled)
+
+	return
+}
+
 // Disable user account
 func (user *User) Disable() (err error) {
 	statement := "update user_account set disabled=true where id=$1"
