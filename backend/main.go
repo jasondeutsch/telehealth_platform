@@ -11,10 +11,13 @@ func main() {
 	loadConfig()
 	router := httprouter.New()
 
-	// Routes
+	// Auth Routes
 	router.POST("/signup", signup)
 	router.POST("/auth", authenticate)
 	router.POST("/logout", logout)
+
+	// Patient Routes
+	router.POST("/patient/create/", createPatient)
 
 	// Prefer white list domains with cors.New().Options({AllowedOrigins...})
 	cors := cors.Default().Handler(router)

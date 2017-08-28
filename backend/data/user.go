@@ -44,6 +44,17 @@ func (user *User) Session() (session Session, err error) {
 }
 
 // Check if session is valid.
+func (session *Session) Check() (valid bool, err error) {
+	err = Db.QueryRow("select id, user_id, login_time from user_session where id = $1", session.Id).Scan(&session.Id, &session.UserId, &session.LoginTime)
+	if err != nil {
+		valid = false
+		return
+	}
+	if session.Id != 0 {
+		valid = true
+	}
+	return
+}
 
 // Delete session
 func (session *Session) Delete() (err error) {
@@ -84,7 +95,6 @@ func UserByEmail(email string) (user User, err error) {
 	err = Db.QueryRow(statement, email).Scan(&user.Id, &user.Email, &user.Password, &user.Disabled, &user.CreatedAt)
 
 	return
-
 }
 
 // Disable user account

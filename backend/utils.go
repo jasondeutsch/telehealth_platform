@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/jasondeutsch/previ/backend/data"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -26,4 +28,21 @@ func loadConfig() {
 	if err != nil {
 		log.Fatalln("Error loading config", err)
 	}
+}
+
+func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err error) {
+	cookie, err := r.Cookie("_cookie")
+	if err == nil {
+		// no session, send user to login
+	}
+
+	sess = data.Session{Id: cookie.Value}
+
+	ok, _ := sess.Check()
+
+	if !ok {
+		err = errors.New("Invalid Session")
+	}
+
+	return
 }
