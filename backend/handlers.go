@@ -57,15 +57,14 @@ type authReponse struct {
 	message string
 }
 
+type AuthRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 // POST
 // /authenticate
 func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-
-	type AuthRequest struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-
 	currentRequest := AuthRequest{}
 
 	err := json.NewDecoder(r.Body).Decode(&currentRequest)
