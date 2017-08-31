@@ -6,3 +6,10 @@ package data
 // create documentation
 // send messages
 // upload things?
+
+type Provider struct {
+	Id         int
+	IsAdmin    bool
+	VidyoRoom  string
+	Credential string
+}

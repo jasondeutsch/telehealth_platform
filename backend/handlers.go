@@ -15,6 +15,14 @@ Admin
 
 **/
 
+func adminAllPatients(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	admin := data.Admin{}
+	patients, _ := admin.GetAllPatients()
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(patients)
+}
+
 /**
 
 Provider

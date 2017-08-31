@@ -5,12 +5,12 @@ import (
 )
 
 type Patient struct {
-	id         int
-	first_name string
-	last_name  string
-	state      string // timezone may be more to the point?
-	country    string
-	created_at string
+	Id         int
+	First_Name string
+	Last_Name  string
+	State      string // timezone may be more to the point?
+	Country    string
+	Created_At string
 }
 
 // Create a new patient
@@ -25,7 +25,7 @@ func (patient *Patient) Create(user User) (err error) {
 
 	defer stmt.Close()
 
-	err = stmt.QueryRow(&patient.id, &patient.first_name, &patient.last_name, &patient.state, &patient.country, time.Now()).Scan(&patient.id)
+	err = stmt.QueryRow(&patient.Id, &patient.First_Name, &patient.Last_Name, &patient.State, &patient.Country, time.Now()).Scan(&patient.Id)
 
 	return
 }
