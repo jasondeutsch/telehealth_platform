@@ -1,23 +1,10 @@
 package data
 
-import "fmt"
-
-//create table patient(
-//  id          int primary key references user_account(id),
-//  first_name  text not null,
-//  last_name   text not null,
-//  state       text not null,
-//  country     text not null,
-//  created_at  timestamp default current_timestamp
-//  );
-
 // Pairing, unpair, cancel account.
 
 // View all patients
 
-type Admin struct{}
-
-func (admin *Admin) GetAllPatients() (patients []Patient, err error) {
+func GetAllPatients() (patients []Patient, err error) {
 
 	rows, err := Db.Query("select id, first_name, last_name, state, country from patient")
 
@@ -28,9 +15,7 @@ func (admin *Admin) GetAllPatients() (patients []Patient, err error) {
 		if err != nil {
 			return
 		}
-		fmt.Println(p)
 		patients = append(patients, p)
-		fmt.Println(patients)
 	}
 
 	return
@@ -39,6 +24,28 @@ func (admin *Admin) GetAllPatients() (patients []Patient, err error) {
 
 // view patient profile patients surveys, documentation, appointment history
 
+//create table provider(
+//  id          int primary key references user_account(id),
+//  is_admin    bool not null,
+//  vidyo_room  text,
+//  credential  text
+//);
+
 // create provider
+//func (admin *Admin) CreateProvider(u User, credential string) (err error) {
+//	statement := "insert into provider(id, credential) values($1, $2)"
+//	stmt, err := Db.Prepare(statement)
+//
+//	if err != nil {
+//		return
+//	}
+//
+//	defer stmt.Close()
+//
+//	Db.QueryRow(u.Id)
+//
+//}
+
+// get provider by id
 
 // super admin to create admins

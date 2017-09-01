@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/jasondeutsch/previ/backend/data"
 	"log"
 	"net/http"
@@ -35,7 +34,7 @@ func loadConfig() {
 func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err error) {
 	cookie, err := r.Cookie("_cookie")
 	if err == nil {
-		// no session, send user to login
+		return
 	}
 
 	cookieValue, _ := strconv.Atoi(cookie.Value)
@@ -45,8 +44,36 @@ func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err err
 	ok, _ := sess.Check()
 
 	if !ok {
-		errors.New("Session invalid")
+		return
 	}
 
 	return
 }
+
+//type JSONResp struct {
+//	Status  string `json:"status"`
+//	Message string `json:"message"`
+//	Result  []byte `json:"result"`
+//}
+//
+//func formatJsonResponse(status string, message string) (jsonString string) {
+//
+//	var res JSONResp
+//
+//	data := json.Unmarshal(result)
+//
+//	fmt.Println(data)
+//
+//	res.Status = status
+//	res.Message = message
+//	res.Result = result
+//
+//	out, _ := json.Marshal(res)
+//
+//	fmt.Println(out)
+//
+//	jsonString = string(out)
+//
+//	return
+//
+//}
