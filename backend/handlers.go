@@ -21,9 +21,9 @@ func indexPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// If user is admin then show all patients.
 	// TODO Handle errors
 
-	patients, _ := data.Patients()
+	patients, err := data.Patients()
 
-	m := map[string]interface{}{"status": "ok", "message": "", "data": patients}
+	m := map[string]interface{}{"error": err, "data": patients}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -54,9 +54,9 @@ func showPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// TODO Handle err case of GetPatientById
 
 	id := p.ByName("id")
-	patient, _ := data.PatientById(id)
+	patient, err := data.PatientById(id)
 
-	m := map[string]interface{}{"status": "ok", "message": "", "data": patient}
+	m := map[string]interface{}{"error": err, "data": patient}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
