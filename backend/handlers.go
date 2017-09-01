@@ -9,18 +9,16 @@ import (
 	"strconv"
 )
 
-type JSONBodyPrefix struct {
-	Status  string
-	Message string
-}
-
 /**
 
-Admin
+Patients Resource
 
 **/
 
-func adminAllPatients(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func patientsIndex(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	// TODO Check if user is admin.
+	// If user is admin then show all patients.
+
 	patients, _ := data.GetAllPatients()
 
 	m := map[string]interface{}{"status": "ok", "message": "", "data": patients}
@@ -30,19 +28,7 @@ func adminAllPatients(w http.ResponseWriter, r *http.Request, p httprouter.Param
 	json.NewEncoder(w).Encode(m)
 }
 
-/**
-
-Provider
-
-**/
-
-/**
-
-Patient
-
-**/
-
-func createPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func patientsCreate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	sess, err := session(w, r)
 
 	if err != nil {
@@ -59,6 +45,9 @@ func createPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	}
 
 	return
+}
+
+func patientsShow(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 }
 
 /**

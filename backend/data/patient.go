@@ -13,6 +13,30 @@ type Patient struct {
 	Created_At string
 }
 
+// View all patients
+
+func GetAllPatients() (patients []Patient, err error) {
+
+	rows, err := Db.Query("select id, first_name, last_name, state, country from patient")
+
+	var p Patient
+	patients = []Patient{}
+	for rows.Next() {
+		err = rows.Scan(&p.Id, &p.First_Name, &p.Last_Name, &p.State, &p.Country)
+		if err != nil {
+			return
+		}
+		patients = append(patients, p)
+	}
+
+	return
+
+}
+
+// Get patient by id
+func GetPatientById() {
+}
+
 // Create a new patient
 // and save it to the DB.
 func (patient *Patient) Create(user User) (err error) {

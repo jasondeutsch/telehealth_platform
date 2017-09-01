@@ -11,16 +11,14 @@ func main() {
 	loadConfig()
 	router := httprouter.New()
 
-	// Admin API
-	router.GET("/admin/patients", adminAllPatients)
+	router.GET("patients", patientsIndex)
+	router.GET("patients/:id", patientsShow)
+	router.POST("/patient/create/", patientsCreate)
 
 	// Auth API
 	router.POST("/signup", signup)
 	router.POST("/auth", authenticate)
 	router.POST("/logout", logout)
-
-	// Patient API
-	router.POST("/patient/create/", createPatient)
 
 	// Prefer white list domains with cors.New().Options({AllowedOrigins...})
 	cors := cors.Default().Handler(router)
