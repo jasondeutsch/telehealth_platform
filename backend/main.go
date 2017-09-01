@@ -12,7 +12,7 @@ func main() {
 	router := httprouter.New()
 
 	// Admin API
-	router.GET("/admin/patients/all", adminAllPatients)
+	router.GET("/admin/patients", adminAllPatients)
 
 	// Auth API
 	router.POST("/signup", signup)
