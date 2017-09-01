@@ -15,9 +15,11 @@ Patients Resource
 
 **/
 
-func patientsIndex(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func indexPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+
 	// TODO Check if user is admin.
 	// If user is admin then show all patients.
+	// TODO Handle errors
 
 	patients, _ := data.GetAllPatients()
 
@@ -28,7 +30,8 @@ func patientsIndex(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	json.NewEncoder(w).Encode(m)
 }
 
-func patientsCreate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func createPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+
 	sess, err := session(w, r)
 
 	if err != nil {
@@ -36,9 +39,7 @@ func patientsCreate(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 	}
 
 	var patient *data.Patient
-
 	user, _ := data.UserById(sess.UserId)
-
 	err = patient.Create(user)
 
 	if err != nil {
@@ -47,7 +48,20 @@ func patientsCreate(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 	return
 }
 
-func patientsShow(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func showPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+
+	// TODO Check if user is authorized to view patient.
+	// TODO Handle err case of GetPatientById
+
+	id := p.ByName("id")
+	patient, _ := data.PatientById(id)
+
+	m := map[string]interface{}{"status": "ok", "message": "", "data": patient}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+
 }
 
 /**

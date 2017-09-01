@@ -1,6 +1,7 @@
 package data
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -34,7 +35,17 @@ func GetAllPatients() (patients []Patient, err error) {
 }
 
 // Get patient by id
-func GetPatientById() {
+func PatientById(id string) (patient Patient, err error) {
+	// TODO account for invalid lookup
+	// TODO account for authorization
+	statement := "select first_name, last_name from patient where id = $1"
+	stmt, err := Db.Prepare(statement)
+	err = stmt.QueryRow(id).Scan(&patient.First_Name, &patient.Last_Name)
+
+	fmt.Println(patient)
+
+	return
+
 }
 
 // Create a new patient

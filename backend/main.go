@@ -11,9 +11,9 @@ func main() {
 	loadConfig()
 	router := httprouter.New()
 
-	router.GET("patients", patientsIndex)
-	router.GET("patients/:id", patientsShow)
-	router.POST("/patient/create/", patientsCreate)
+	router.GET("/patient", indexPatient)
+	router.GET("/patient/:id", showPatient)
+	router.POST("/patient/create/", createPatient)
 
 	// Auth API
 	router.POST("/signup", signup)
