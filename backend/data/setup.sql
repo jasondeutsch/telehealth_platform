@@ -13,7 +13,7 @@ create table user_session(
 );
 
 create table role (
-    id       int pimrary key referencees user_account(id),
+    id       int primary key references user_account(id),
     provider bool,
     patient  bool,
     admin    bool
@@ -65,6 +65,6 @@ create table question(
 create table answer(
     question_id int primary key references question(id),
     survey_id   int references survey(id),
-    user        int references user_account(id),
+    user_id        int references user_account(id),
     answer      text
 );
