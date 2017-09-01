@@ -21,17 +21,13 @@ Admin
 **/
 
 func adminAllPatients(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	patients, _ := data.GetAllPatients()
-
-	//jsonBodyPrefix := JSONBodyPrefix{"ok", ""}
+	patients, err := data.GetAllPatients()
 
 	m := map[string]interface{}{"status": "ok", "message": "", "data": patients}
-	fmt.Println(m)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(m)
-	//fmt.Fprint(w, out)
 }
 
 /**
