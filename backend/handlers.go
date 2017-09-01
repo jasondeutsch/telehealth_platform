@@ -21,7 +21,7 @@ func indexPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// If user is admin then show all patients.
 	// TODO Handle errors
 
-	patients, _ := data.GetAllPatients()
+	patients, _ := data.Patients()
 
 	m := map[string]interface{}{"status": "ok", "message": "", "data": patients}
 

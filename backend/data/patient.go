@@ -16,7 +16,7 @@ type Patient struct {
 
 // View all patients
 
-func GetAllPatients() (patients []Patient, err error) {
+func Patients() (patients []Patient, err error) {
 
 	rows, err := Db.Query("select id, first_name, last_name, state, country from patient")
 
