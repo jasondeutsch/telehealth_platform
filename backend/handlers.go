@@ -21,7 +21,7 @@ Admin
 **/
 
 func adminAllPatients(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	patients, err := data.GetAllPatients()
+	patients, _ := data.GetAllPatients()
 
 	m := map[string]interface{}{"status": "ok", "message": "", "data": patients}
 
