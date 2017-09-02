@@ -4,7 +4,11 @@ create table user_account(
   password      text, 
   disabled      bool,
   created_at    timestamp default current_timestamp
+
 );
+
+alter table user_account
+add constraint order_unique unique (email);
 
 create table user_session(
   id             serial primary key, 
@@ -44,7 +48,7 @@ create table availability(
 
 create table appointment(
   id         serial primary key,
-  date       date not null,
+  appt_day   date not null,
   start_time time not null,
   end_time   time not null,
   created_at timestamp default current_timestamp
