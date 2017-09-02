@@ -1,7 +1,6 @@
 package data
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -9,13 +8,12 @@ type Patient struct {
 	Id         int
 	First_Name string
 	Last_Name  string
-	State      string // timezone may be more to the point?
+	State      string
 	Country    string
 	Created_At string
 }
 
 // View all patients
-
 func Patients() (patients []Patient, err error) {
 
 	rows, err := Db.Query("select id, first_name, last_name, state, country from patient")
@@ -41,8 +39,6 @@ func PatientById(id string) (patient Patient, err error) {
 	statement := "select first_name, last_name from patient where id = $1"
 	stmt, err := Db.Prepare(statement)
 	err = stmt.QueryRow(id).Scan(&patient.First_Name, &patient.Last_Name)
-
-	fmt.Println(patient)
 
 	return
 

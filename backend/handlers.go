@@ -34,18 +34,19 @@ func createPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 
 	sess, err := session(w, r)
 
-	if err != nil {
-		return
-	}
+	user, _ := data.UserById(sess.UserId)
 
 	var patient *data.Patient
-	user, _ := data.UserById(sess.UserId)
+	err = json.NewDecoder(r.Body).Decode(&patient)
+	fmt.Println(patient)
 	err = patient.Create(user)
 
-	if err != nil {
-	}
+	m := map[string]interface{}{"error": err != nil, "data": user}
 
-	return
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+
 }
 
 func showPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
@@ -81,7 +82,7 @@ type AuthRequest struct {
 }
 
 // POST
-// /authenticate
+// /auth
 func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	currentRequest := AuthRequest{}
 
@@ -98,6 +99,7 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 
 	fmt.Println(user.Password)
+	fmt.Println(data.Encrypt(currentRequest.Password))
 
 	if user.Password == data.Encrypt(currentRequest.Password) {
 
@@ -132,6 +134,8 @@ func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 
 	err = user.Create()
+
+	fmt.Println(err)
 
 	if err != nil {
 		http.Error(w, err.Error(), 400)
