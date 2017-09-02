@@ -1,6 +1,7 @@
 package data
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -75,7 +76,7 @@ func (session *Session) Delete() (err error) {
 // Create a new user
 // and save it to DB.
 func (user *User) Create() (err error) {
-	statement := "insert into user_account (email, password, disabled, created_at) values($1, $2, $3, $4)"
+	statement := "insert into user_account(email, password, disabled, created_at) values($1, $2, $3, $4) returning id"
 	stmt, err := Db.Prepare(statement)
 
 	if err != nil {
