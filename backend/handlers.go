@@ -23,7 +23,7 @@ func indexPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	patients, err := data.Patients()
 
-	m := map[string]interface{}{"error": err, "data": patients}
+	m := map[string]interface{}{"success": err == nil, "message": "", "data": patients}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -41,7 +41,7 @@ func createPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	fmt.Println(patient)
 	err = patient.Create(user)
 
-	m := map[string]interface{}{"error": err != nil, "data": user}
+	m := map[string]interface{}{"success": err == nil, "message": "", "data": user}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -57,7 +57,7 @@ func showPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	id := p.ByName("id")
 	patient, err := data.PatientById(id)
 
-	m := map[string]interface{}{"error": err, "data": patient}
+	m := map[string]interface{}{"success": err == nil, "message": "", "data": patient}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -129,19 +129,16 @@ func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
 		return
 	}
 
 	err = user.Create()
 
-	fmt.Println(err)
+	m := map[string]interface{}{"success": err == nil, "message": "user created", "data": ""}
 
-	if err != nil {
-		http.Error(w, err.Error(), 400)
-		return
-	}
-	fmt.Fprintf(w, "success")
+	w.Header().Set("Contnet-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
 }
 
 // POST
