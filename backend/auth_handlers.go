@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/jasondeutsch/previ/backend/data"
 	"github.com/julienschmidt/httprouter"
+	"github.com/satori/go.uuid"
 	"net/http"
 	"strconv"
 )
@@ -47,11 +48,9 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			// do stuff
 		}
 
-		uuid, _ := GenUUID()
-
 		cookie := http.Cookie{
 			Name:     "_cookie",
-			Value:    string(uuid),
+			Value:    uuid.NewV4().String(),
 			HttpOnly: true,
 		}
 		http.SetCookie(w, &cookie)
