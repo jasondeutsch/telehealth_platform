@@ -23,23 +23,25 @@ type AuthRequest struct {
 // /auth
 func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
+	// Prepare the JSON response
+	m := map[string]interface{}{}
+
 	currentRequest := AuthRequest{}
 
 	err := json.NewDecoder(r.Body).Decode(&currentRequest)
 
 	if err != nil {
-		http.Error(w, err.Error(), 401)
+
+		w.WriteHeader(http.StatusBadRequest)
+
+		m["error"] = true
+		m["message"] = "Could not understand request"
+		m["data"] = nil
 	}
 
-	user, err := data.UserByEmail(currentRequest.Email)
-
-	if err != nil {
-		http.Error(w, err.Error(), 400)
-	}
+	user, _ := data.UserByEmail(currentRequest.Email)
 
 	w.Header().Set("Content-Type", "application/json")
-
-	m := map[string]interface{}{}
 
 	if user.Password == data.Encrypt(currentRequest.Password) {
 
