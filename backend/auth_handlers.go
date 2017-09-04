@@ -22,6 +22,7 @@ type AuthRequest struct {
 // POST
 // /auth
 func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+
 	currentRequest := AuthRequest{}
 
 	err := json.NewDecoder(r.Body).Decode(&currentRequest)
@@ -36,8 +37,9 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		http.Error(w, err.Error(), 400)
 	}
 
-	fmt.Println(user.Password)
-	fmt.Println(data.Encrypt(currentRequest.Password))
+	w.Header().Set("Content-Type", "application/json")
+
+	m := map[string]interface{}{}
 
 	if user.Password == data.Encrypt(currentRequest.Password) {
 
@@ -51,12 +53,22 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			HttpOnly: true,
 		}
 		http.SetCookie(w, &cookie)
-		w.Write([]byte("authorized\n"))
+
+		fmt.Println(err)
+
+		m["error"] = err != nil
+		m["message"] = "authorized"
+		m["data"] = nil
 
 	} else {
 
-		w.Write([]byte("not authorized\n"))
+		m["error"] = true
+		m["message"] = "authorization failed"
+		m["data"] = nil
+
 	}
+
+	json.NewEncoder(w).Encode(m)
 
 }
 
@@ -74,7 +86,7 @@ func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	m := map[string]interface{}{"success": err == nil, "message": "user created", "data": ""}
 
-	w.Header().Set("Contnet-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(m)
 }
