@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"strconv"
 )
 
@@ -48,4 +49,12 @@ func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err err
 	}
 
 	return
+}
+
+func GenUUID() (uuid []byte, err error) {
+
+	uuid, err = exec.Command("uuidgen").Output()
+
+	return
+
 }

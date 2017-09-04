@@ -46,9 +46,12 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		if err != nil {
 			// do stuff
 		}
+
+		uuid, _ := GenUUID()
+
 		cookie := http.Cookie{
 			Name:     "_cookie",
-			Value:    strconv.Itoa(user.Id), // may need something better her, UUID?
+			Value:    string(uuid),
 			HttpOnly: true,
 		}
 		http.SetCookie(w, &cookie)
