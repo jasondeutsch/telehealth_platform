@@ -60,6 +60,8 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	} else {
 
+		w.WriteHeader(http.StatusUnauthorized)
+
 		m["error"] = true
 		m["message"] = "authorization failed"
 		m["data"] = nil
