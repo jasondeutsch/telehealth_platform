@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/jasondeutsch/previ/backend/data"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -84,7 +83,7 @@ func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	err = user.Create()
 
-	m := map[string]interface{}{"success": err == nil, "message": "user created", "data": ""}
+	m := map[string]interface{}{"error": err != nil, "message": "user created", "data": ""}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -101,7 +100,9 @@ func logout(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 		session := data.Session{Id: id}
 		session.Delete()
-		fmt.Fprintf(w, "success")
 	}
-	// handle no cookie
+
+	w.Header().Set("Content-Type", "application/json")
+	m := map[string]interface{}{"error": err != nil, "message": "session deleted", "data": nil}
+	json.NewEncoder(w).Encode(m)
 }
