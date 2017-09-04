@@ -20,7 +20,7 @@ type Session struct {
 
 // Create a new session for an existing user.
 func (user *User) CreateSession() (session Session, err error) {
-	statement := "insert into user_session (user_id, login_time) values($1, $2)"
+	statement := "insert into user_session (user_id, login_time) values($1, $2) returning id"
 	stmt, err := Db.Prepare(statement)
 
 	if err != nil {
@@ -29,7 +29,7 @@ func (user *User) CreateSession() (session Session, err error) {
 
 	defer stmt.Close()
 
-	err = stmt.QueryRow(&session.UserId, time.Now()).Scan(&session.Id)
+	err = stmt.QueryRow(user.Id, time.Now()).Scan(&session.Id)
 
 	return
 }

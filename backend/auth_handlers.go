@@ -54,8 +54,6 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		}
 		http.SetCookie(w, &cookie)
 
-		fmt.Println(err)
-
 		m["error"] = err != nil
 		m["message"] = "authorized"
 		m["data"] = nil
