@@ -38,6 +38,15 @@ create table patient(
 );
 
 
+/* Patient/Provider Pairings */
+
+create table pairing(
+	id       serial primary key,
+        patient  int references patient(id),	
+	provider int references provider(id),
+	active   bool default true
+);
+
 /* Scheduling and Sessions */
 
 create table availability(
