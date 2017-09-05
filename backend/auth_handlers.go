@@ -87,7 +87,7 @@ func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	err = user.Create()
 
-	m := map[string]interface{}{"error": err == nil, "message": "", "data": ""}
+	m := map[string]interface{}{"error": err != nil, "message": "", "data": ""}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
