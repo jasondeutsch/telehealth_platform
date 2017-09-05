@@ -2,9 +2,10 @@ create table user_account(
   id            serial primary key,
   email         text,
   password      text, 
-  disabled      bool,
+  disabled      bool default false,
+  confirmed     bool default false, 
+  role          text[],
   created_at    timestamp default current_timestamp
-
 );
 
 alter table user_account
@@ -16,18 +17,15 @@ create table user_session(
   login_time     timestamp not null
 );
 
-create table role (
-    id       int primary key references user_account(id),
-    provider bool,
-    patient  bool,
-    admin    bool
-);
+
+/* User Types */
 
 create table provider(
-  id          int primary key references user_account(id), 
-  is_admin    bool not null,
-  vidyo_room  text,
-  credential  text
+  id           int primary key references user_account(id), 
+  is_admin     bool not null,
+  vidyo_room   text,
+  phone_number text,
+  credential   text
 );
 
 create table patient(
@@ -37,7 +35,10 @@ create table patient(
   state       text not null,
   country     text not null,
   created_at  timestamp default current_timestamp
-  );
+);
+
+
+/* Scheduling and Sessions */
 
 create table availability(
   id          serial primary key,
@@ -54,6 +55,9 @@ create table appointment(
   created_at timestamp default current_timestamp
 );
 
+
+/* Surveys, Forms and Questionnaires */
+
 create table survey(
     id          serial primary key,
     name        text,
@@ -69,6 +73,6 @@ create table question(
 create table answer(
     question_id int primary key references question(id),
     survey_id   int references survey(id),
-    user_id        int references user_account(id),
+    user_id     int references user_account(id),
     answer      text
 );
