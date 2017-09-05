@@ -22,6 +22,8 @@ create table user_session(
 
 create table provider(
   id           int primary key references user_account(id), 
+  first_name   text,
+  last_name    text,
   vidyo_room   text,
   phone_number text,
   credential   text
@@ -40,10 +42,10 @@ create table patient(
 /* Patient/Provider Pairings */
 
 create table pairing(
-	id       serial primary key,
-        patient  int references patient(id),	
-	provider int references provider(id),
-	active   bool default true
+  id       serial primary key,
+  patient  int references patient(id),	
+  provider int references provider(id),
+  active   bool default true
 );
 
 /* Scheduling and Sessions */
