@@ -22,7 +22,6 @@ create table user_session(
 
 create table provider(
   id           int primary key references user_account(id), 
-  is_admin     bool not null,
   vidyo_room   text,
   phone_number text,
   credential   text
