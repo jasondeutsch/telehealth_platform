@@ -75,8 +75,6 @@ func createProvider(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 
 	var provider *data.Provider
 	err := json.NewDecoder(r.Body).Decode(&provider)
-	fmt.Println(provider)
-	fmt.Println(sess.UserId)
 	provider.Id = sess.UserId
 	fmt.Println(provider)
 	err = provider.Create()
