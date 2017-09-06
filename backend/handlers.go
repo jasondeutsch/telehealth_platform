@@ -71,5 +71,19 @@ Provider Resource
 **/
 
 func createProvider(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	_, _ = session(w, r)
+	sess, _ := session(w, r)
+
+	var provider *data.Provider
+	err := json.NewDecoder(r.Body).Decode(&provider)
+	fmt.Println(provider)
+	fmt.Println(sess.UserId)
+	provider.Id = sess.UserId
+	fmt.Println(provider)
+	err = provider.Create()
+
+	m := map[string]interface{}{"error": err != nil, "message": "", "data": nil}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
 }
