@@ -13,6 +13,7 @@ add constraint order_unique unique (email);
 
 create table user_session(
   id             serial primary key, 
+  uuid           text not null unique,
   user_id        int references user_account(id),
   login_time     timestamp not null
 );

@@ -63,3 +63,13 @@ func showPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	json.NewEncoder(w).Encode(m)
 
 }
+
+/**
+
+Provider Resource
+
+**/
+
+func createProvider(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	_, _ = session(w, r)
+}

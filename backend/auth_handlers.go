@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/jasondeutsch/previ/backend/data"
 	"github.com/julienschmidt/httprouter"
-	"github.com/satori/go.uuid"
 	"net/http"
 	"strconv"
 )
@@ -45,14 +44,14 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	if user.Password == data.Encrypt(currentRequest.Password) {
 
-		_, err := user.CreateSession()
+		sess, err := user.CreateSession()
 		if err != nil {
 			// do stuff
 		}
 
 		cookie := http.Cookie{
 			Name:     "_cookie",
-			Value:    uuid.NewV4().String(),
+			Value:    sess.Uuid,
 			HttpOnly: true,
 		}
 		http.SetCookie(w, &cookie)

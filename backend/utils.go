@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/jasondeutsch/previ/backend/data"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 type Configuration struct {
@@ -33,18 +33,16 @@ func loadConfig() {
 
 func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err error) {
 	cookie, err := r.Cookie("_cookie")
-	if err == nil {
+	if err != nil {
 		return
 	}
 
-	cookieValue, _ := strconv.Atoi(cookie.Value)
-
-	sess = data.Session{Id: cookieValue}
-
+	cookieValue := cookie.Value
+	sess = data.Session{Uuid: cookieValue}
 	ok, _ := sess.Check()
 
 	if !ok {
-		return
+		fmt.Println("session not valid")
 	}
 
 	return
