@@ -20,7 +20,7 @@ func main() {
 	// Auth API
 	router.POST("/signup", signup)
 	router.POST("/auth", authenticate)
-	router.POST("/logout", logout)
+	router.GET("/logout", logout)
 
 	// Prefer white list domains with cors.New().Options({AllowedOrigins...})
 	cors := cors.Default().Handler(router)

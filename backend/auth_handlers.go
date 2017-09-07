@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/jasondeutsch/previ/backend/data"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
-	"strconv"
 )
 
 type authReponse struct {
@@ -96,13 +96,12 @@ func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 // POST
 // /logout
 func logout(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	cookie, err := r.Cookie("_cookie")
+	sess, err := session(w, r)
+
+	fmt.Println(err)
 
 	if err != http.ErrNoCookie {
-		id, _ := strconv.Atoi(cookie.Value)
-
-		session := data.Session{Id: id}
-		session.Delete()
+		sess.Delete()
 	}
 
 	w.Header().Set("Content-Type", "application/json")
