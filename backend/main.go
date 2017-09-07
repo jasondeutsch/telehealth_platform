@@ -15,6 +15,7 @@ func main() {
 	router.GET("/patient/:id", showPatient)
 	router.POST("/patient/create/", createPatient)
 
+	router.GET("/provider", indexProvider)
 	router.POST("/provider/create", createProvider)
 
 	// Auth API

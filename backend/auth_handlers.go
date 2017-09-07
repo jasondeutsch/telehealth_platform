@@ -98,7 +98,7 @@ func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 func logout(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	sess, err := session(w, r)
 
-	fmt.Println(err)
+	fmt.Println(sess)
 
 	if err != http.ErrNoCookie {
 		sess.Delete()

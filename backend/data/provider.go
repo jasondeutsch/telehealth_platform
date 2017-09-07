@@ -21,7 +21,27 @@ type Provider struct {
 	Credential  []string `json:"credential"`
 }
 
-// create provider
+// Get Index of Providers
+func Providers() (providers []Provider, err error) {
+	// TODO include credentail array in sql query
+	statement := "select id, first_name, last_name, phone_number, vidyo_room from provider"
+
+	rows, err := Db.Query(statement)
+	fmt.Println(rows)
+
+	var p Provider
+
+	for rows.Next() {
+		err = rows.Scan(&p.Id, &p.FirstName, &p.LastName, &p.PhoneNumber, &p.VidyoRoom)
+		if err != nil {
+			return
+		}
+		providers = append(providers, p)
+	}
+	return
+}
+
+// Create provider
 func (p *Provider) Create() (err error) {
 	fmt.Println("Create()")
 	statement := "insert into provider(id, first_name, last_name, phone_number, credential) values($1, $2, $3, $4, $5)"

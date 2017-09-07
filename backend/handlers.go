@@ -88,3 +88,20 @@ func createProvider(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(m)
 }
+
+func indexProvider(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	sess, _ := session(w, r)
+
+	fmt.Println(sess)
+
+	providers, err := data.Providers()
+	fmt.Println(err)
+	fmt.Println(providers)
+
+	m := map[string]interface{}{"error": err != nil, "message": "", "data": providers}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+
+}
