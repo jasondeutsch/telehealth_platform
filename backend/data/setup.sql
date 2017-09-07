@@ -27,7 +27,7 @@ create table provider(
   last_name    text,
   vidyo_room   text,
   phone_number text,
-  credential   text
+  credential   text[]
 );
 
 create table patient(

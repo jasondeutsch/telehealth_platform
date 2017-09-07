@@ -26,10 +26,10 @@ insert into patient(id, first_name, last_name, state, country) values(3,'David',
 insert into patient(id, first_name, last_name, state, country) values(4,'Jason', 'Deutsch', 'Austin', 'TX');
 insert into patient(id, first_name, last_name, state, country) values(5,'Mary', 'Smith', 'Austin', 'TX');
 
-insert into provider(id, first_name, last_name, phone_number, credential) values(6,'Amy', 'Pieczarka', '5555555555', 'RD');
-insert into provider(id, first_name, last_name, phone_number, credential) values(7,'Jane','Doe','555555555','MD');
-insert into provider(id, first_name, last_name, phone_number, credential) values(8,'John','Smith','5555555555','DO');
-insert into provider(id, first_name, last_name, phone_number, credential) values(9,'Thomas','Gekkly','5555555555','PhD');
+insert into provider(id, first_name, last_name, phone_number, vidyo_room, credential) values(6,'Amy', 'Pieczarka', '5555555555','', '{"RD"}');
+insert into provider(id, first_name, last_name, phone_number, vidyo_room, credential) values(7,'Jane','Doe','555555555','','{"MD"}');
+insert into provider(id, first_name, last_name, phone_number, vidyo_room, credential) values(8,'John','Smith','5555555555','','{"DO"}');
+insert into provider(id, first_name, last_name, phone_number, vidyo_room, credential) values(9,'Thomas','Gekkly','5555555555','', '{"PhD"}');
 
 insert into pairing(patient, provider) values(1,6);
 insert into pairing(patient, provider) values(1,7);
