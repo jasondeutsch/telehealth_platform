@@ -127,3 +127,7 @@ func (user *User) Disable() (err error) {
 
 	return
 }
+
+//Checks if user is admin
+//func (user *User) IsAdmin() (isAdmin bool, err error) {
+//}

@@ -50,10 +50,13 @@ func createPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 
 func showPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
-	// TODO Check if user is authorized to view patient.
-	// TODO Handle err case of GetPatientById
+	sess, err := session(w, r)
+	user, _ := sess.User()
+
+	fmt.Println(user)
 
 	id := p.ByName("id")
+
 	patient, err := data.PatientById(id)
 
 	m := map[string]interface{}{"success": err == nil, "message": "", "data": patient}

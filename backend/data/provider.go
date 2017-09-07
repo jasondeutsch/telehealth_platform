@@ -38,3 +38,12 @@ func (p *Provider) Create() (err error) {
 	return
 
 }
+
+func (p *Provider) HasPatient(patientId int) (err error) {
+	statement := "select count(*) from pairing where provider = $1 and patient = $2"
+
+	_, err = Db.Exec(statement, p.Id, patientId)
+
+	return
+
+}
