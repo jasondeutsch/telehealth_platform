@@ -5,13 +5,6 @@ import (
 	"github.com/lib/pq"
 )
 
-// view everything about the patient
-// create appointments
-// summary of suggestions
-// create documentation
-// send messages
-// upload things?
-
 type Provider struct {
 	Id          int
 	FirstName   string   `json:"first_name"`
