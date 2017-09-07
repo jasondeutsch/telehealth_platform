@@ -52,6 +52,9 @@ func (p *Provider) Create() (err error) {
 
 }
 
+// Check if provider is paired to patient.
+// This is used prior to geting patient info.
+
 func (p *Provider) HasPatient(patientId int) (err error) {
 	statement := "select count(*) from pairing where provider = $1 and patient = $2"
 
