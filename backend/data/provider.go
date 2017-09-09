@@ -16,8 +16,7 @@ type Provider struct {
 
 // Get Index of Providers
 func Providers() (providers []Provider, err error) {
-	// TODO include credentail array in sql query
-	statement := "select id, first_name, last_name, phone_number, vidyo_room from provider"
+	statement := "select id, first_name, last_name, phone_number, vidyo_room, credential from provider"
 
 	rows, err := Db.Query(statement)
 	fmt.Println(rows)
@@ -25,7 +24,8 @@ func Providers() (providers []Provider, err error) {
 	var p Provider
 
 	for rows.Next() {
-		err = rows.Scan(&p.Id, &p.FirstName, &p.LastName, &p.PhoneNumber, &p.VidyoRoom)
+		err = rows.Scan(&p.Id, &p.FirstName, &p.LastName, &p.PhoneNumber, &p.VidyoRoom, pq.Array(&p.Credential))
+
 		if err != nil {
 			return
 		}
@@ -54,7 +54,6 @@ func (p *Provider) Create() (err error) {
 
 // Check if provider is paired to patient.
 // This is used prior to geting patient info.
-
 func (p *Provider) HasPatient(patientId int) (err error) {
 	statement := "select count(*) from pairing where provider = $1 and patient = $2"
 
