@@ -36,3 +36,8 @@ insert into pairing(patient, provider) values(1,7);
 insert into pairing(patient, provider) values(1,8);
 insert into pairing(patient, provider) values(2,6);
 insert into pairing(patient, provider) values(3,7);
+
+
+insert into survey(id, name, description) valus(1,'Health Questionaire','');
+insert into survey(id, name, description) valus(2,'Five Day Food Log','');
+insert into survey(id, name, description) valus(3,'Health Questionaire','');
