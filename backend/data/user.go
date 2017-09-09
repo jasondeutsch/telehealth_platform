@@ -1,6 +1,7 @@
 package data
 
 import (
+	"github.com/lib/pq"
 	"github.com/satori/go.uuid"
 	"time"
 )
@@ -10,6 +11,7 @@ type User struct {
 	Email     string
 	Password  string
 	Disabled  bool
+	Role      []string
 	CreatedAt time.Time
 }
 
@@ -99,8 +101,8 @@ func (user *User) Create() (err error) {
 // Get user by email
 func UserByEmail(email string) (user User, err error) {
 	user = User{}
-	statement := "select id, email, password, disabled, created_at from user_account where email = $1"
-	err = Db.QueryRow(statement, email).Scan(&user.Id, &user.Email, &user.Password, &user.Disabled, &user.CreatedAt)
+	statement := "select id, email, password, disabled, created_at, role from user_account where email = $1"
+	err = Db.QueryRow(statement, email).Scan(&user.Id, &user.Email, &user.Password, &user.Disabled, &user.CreatedAt, pq.Array(&user.Role))
 
 	return
 }
@@ -108,8 +110,8 @@ func UserByEmail(email string) (user User, err error) {
 // Get user by ID
 func UserById(id int) (user User, err error) {
 	user = User{}
-	statement := "select id, email, disabled from user_account where id = $1"
-	err = Db.QueryRow(statement, id).Scan(&user.Id, &user.Email, &user.Disabled)
+	statement := "select id, email, disabled, role from user_account where id = $1"
+	err = Db.QueryRow(statement, id).Scan(&user.Id, &user.Email, &user.Disabled, pq.Array(&user.Role))
 
 	return
 }
