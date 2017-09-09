@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jasondeutsch/previ/backend/data"
-	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
 
@@ -20,7 +19,7 @@ type AuthRequest struct {
 
 // POST
 // /auth
-func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func authenticate(w http.ResponseWriter, r *http.Request) {
 
 	// Prepare the JSON response
 	m := map[string]interface{}{}
@@ -76,7 +75,7 @@ func authenticate(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 // POST
 // /signup
-func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func signup(w http.ResponseWriter, r *http.Request) {
 	var user *data.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -95,7 +94,7 @@ func signup(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 // POST
 // /logout
-func logout(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func logout(w http.ResponseWriter, r *http.Request) {
 	sess, err := session(w, r)
 
 	fmt.Println(sess)

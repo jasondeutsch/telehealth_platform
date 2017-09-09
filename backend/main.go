@@ -2,29 +2,29 @@ package main
 
 import (
 	"fmt"
-	"github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"net/http"
 )
 
 func main() {
 	loadConfig()
-	router := httprouter.New()
+	r := mux.NewRouter()
 
-	router.GET("/patient", indexPatient)
-	router.GET("/patient/:id", showPatient)
-	router.POST("/patient/create/", createPatient)
+	r.HandleFunc("/patient", indexPatient).Methods("GET")
+	r.HandleFunc("/patient/show", showPatient).Methods("GET")
+	r.HandleFunc("/patient/create/", createPatient).Methods("POST")
 
-	router.GET("/provider", indexProvider)
-	router.POST("/provider/create", createProvider)
+	r.HandleFunc("/provider", indexProvider).Methods("GET")
+	r.HandleFunc("/provider/create", createProvider).Methods("POST")
 
-	// Auth API
-	router.POST("/signup", signup)
-	router.POST("/auth", authenticate)
-	router.DELETE("/logout", logout)
+	//Auth API
+	r.HandleFunc("/signup", signup).Methods("POST")
+	r.HandleFunc("/auth", authenticate).Methods("POST")
+	r.HandleFunc("/logout", logout).Methods("DELETE")
 
 	// Prefer white list domains with cors.New().Options({AllowedOrigins...})
-	cors := cors.Default().Handler(router)
+	cors := cors.Default().Handler(r)
 
 	server := &http.Server{
 		Addr:    config.Address,

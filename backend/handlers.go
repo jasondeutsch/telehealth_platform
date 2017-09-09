@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jasondeutsch/previ/backend/data"
-	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
 
@@ -14,7 +13,7 @@ Patients Resource
 
 **/
 
-func indexPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func indexPatient(w http.ResponseWriter, r *http.Request) {
 
 	// TODO Check if user is admin.
 	// If user is admin then show all patients.
@@ -29,7 +28,7 @@ func indexPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	json.NewEncoder(w).Encode(m)
 }
 
-func createPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func createPatient(w http.ResponseWriter, r *http.Request) {
 
 	sess, err := session(w, r)
 
@@ -48,14 +47,15 @@ func createPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 
 }
 
-func showPatient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func showPatient(w http.ResponseWriter, r *http.Request) {
 
 	sess, err := session(w, r)
 	user, _ := sess.User()
 
 	fmt.Println(user)
 
-	id := p.ByName("id")
+	var id string
+	err = json.NewDecoder(r.Body).Decode(&id)
 
 	patient, err := data.PatientById(id)
 
@@ -73,7 +73,7 @@ Provider Resource
 
 **/
 
-func createProvider(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func createProvider(w http.ResponseWriter, r *http.Request) {
 	sess, _ := session(w, r)
 
 	var provider *data.Provider
@@ -89,7 +89,7 @@ func createProvider(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 	json.NewEncoder(w).Encode(m)
 }
 
-func indexProvider(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func indexProvider(w http.ResponseWriter, r *http.Request) {
 	sess, _ := session(w, r)
 
 	fmt.Println(sess)
