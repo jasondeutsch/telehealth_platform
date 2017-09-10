@@ -35,8 +35,7 @@ func Providers() (providers []Provider, err error) {
 }
 
 // Create provider
-func (p *Provider) Create() (err error) {
-	fmt.Println("Create()")
+func (p *Provider) Create(user User) (err error) {
 	statement := "insert into provider(id, first_name, last_name, phone_number, credential) values($1, $2, $3, $4, $5)"
 	stmt, err := Db.Prepare(statement)
 
@@ -47,6 +46,10 @@ func (p *Provider) Create() (err error) {
 	defer stmt.Close()
 
 	_, err = stmt.Exec(p.Id, p.FirstName, p.LastName, p.PhoneNumber, pq.Array(p.Credential))
+
+	if err == nil {
+		err = user.SetRole("provider")
+	}
 
 	return
 
