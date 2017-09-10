@@ -21,8 +21,7 @@ func main() {
 	//Auth API
 	r.HandleFunc("/signup", signup).Methods("POST").Headers("Content-Type", "application/json")
 	r.HandleFunc("/auth", authenticate).Methods("POST").Headers("Content-Type", "application/json")
-	r.HandleFunc("/logout", logout).Methods("DELETE").Headers("Content-Type", "application/json")
-
+	r.HandleFunc("/logout", logout).Methods("DELETE")
 	// Prefer white list domains with cors.New().Options({AllowedOrigins...})
 	cors := cors.Default().Handler(r)
 
