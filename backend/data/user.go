@@ -130,6 +130,14 @@ func (user *User) Disable() (err error) {
 	return
 }
 
-//Checks if user is admin
-//func (user *User) IsAdmin() (isAdmin bool, err error) {
-//}
+// Set role: Patient Provider Admin
+func (user *User) SetRole(role string) (err error) {
+	statement := "update user_account set role=array_append(role, $2) where id=$1"
+	stmt, err := Db.Prepare(statement)
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(&user.Id, role)
+
+	return
+}

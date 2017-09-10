@@ -21,7 +21,7 @@ func indexPatient(w http.ResponseWriter, r *http.Request) {
 
 	patients, err := data.Patients()
 
-	m := map[string]interface{}{"success": err == nil, "message": "", "data": patients}
+	m := map[string]interface{}{"error": err != nil, "message": "", "data": patients}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -36,10 +36,10 @@ func createPatient(w http.ResponseWriter, r *http.Request) {
 
 	var patient *data.Patient
 	err = json.NewDecoder(r.Body).Decode(&patient)
-	fmt.Println(patient)
+	patient.Id = user.Id
 	err = patient.Create(user)
 
-	m := map[string]interface{}{"success": err == nil, "message": "", "data": user}
+	m := map[string]interface{}{"error": err != nil, "message": "", "data": user}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
