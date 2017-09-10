@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jasondeutsch/previ/backend/data"
+	"github.com/jasondeutsch/previ/data"
 	"log"
 	"net/http"
 	"os"
