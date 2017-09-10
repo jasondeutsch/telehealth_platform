@@ -49,15 +49,24 @@ func createPatient(w http.ResponseWriter, r *http.Request) {
 
 func showPatient(w http.ResponseWriter, r *http.Request) {
 
+	// TODO authorization
+
 	sess, err := session(w, r)
 	user, _ := sess.User()
 
 	fmt.Println(user)
 
-	var id string
-	err = json.NewDecoder(r.Body).Decode(&id)
+	type requestId struct {
+		Id string
+	}
 
-	patient, err := data.PatientById(id)
+	var rId *requestId
+
+	json.NewDecoder(r.Body).Decode(&rId)
+
+	fmt.Println(rId.Id)
+
+	patient, err := data.PatientById(rId.Id)
 
 	m := map[string]interface{}{"success": err == nil, "message": "", "data": patient}
 
