@@ -84,12 +84,13 @@ Provider Resource
 
 func createProvider(w http.ResponseWriter, r *http.Request) {
 	sess, _ := session(w, r)
+	user, _ := data.UserById(sess.UserId)
 
 	var provider *data.Provider
 	err := json.NewDecoder(r.Body).Decode(&provider)
-	provider.Id = sess.UserId
-	fmt.Println(provider)
-	err = provider.Create()
+	provider.Id = user.Id
+
+	err = provider.Create(user)
 
 	m := map[string]interface{}{"error": err != nil, "message": "", "data": nil}
 
