@@ -38,6 +38,7 @@ func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err err
 	}
 
 	cookieValue := cookie.Value
+
 	sess = data.Session{Uuid: cookieValue}
 	ok, _ := sess.Check()
 
