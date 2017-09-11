@@ -19,9 +19,9 @@ func main() {
 	r.HandleFunc("/logout", logout).Methods("DELETE")
 
 	r.HandleFunc("/admin", adminIndex)
+	r.HandleFunc("/admin/patients/{id}", showPatient)
 
 	r.HandleFunc("/patient", indexPatient).Methods("GET")
-	r.HandleFunc("/patient/show", showPatient).Methods("POST").Headers("Content-Type", "application/json")
 	r.HandleFunc("/patient/create", createPatient).Methods("POST").Headers("Content-Type", "application/json")
 
 	r.HandleFunc("/provider", indexProvider).Methods("GET")

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/jasondeutsch/previ/data"
 	"html/template"
 	"net/http"
@@ -61,29 +62,19 @@ func showPatient(w http.ResponseWriter, r *http.Request) {
 
 	// TODO authorization
 
-	sess, err := session(w, r)
-	user, _ := sess.User()
+	// sess, _ := session(w, r)
+	//	user, _ := sess.User()
 
-	fmt.Println(user)
+	vars := mux.Vars(r)
+	id := vars["id"]
+	patient, _ := data.PatientById(id)
 
-	type requestId struct {
-		Id string
-	}
+	files := []string{"templates/layout.html", "templates/private.patient.html"}
 
-	var rId *requestId
-
-	json.NewDecoder(r.Body).Decode(&rId)
-
-	fmt.Println(rId.Id)
-
-	patient, err := data.PatientById(rId.Id)
-
-	m := map[string]interface{}{"success": err == nil, "message": "", "data": patient}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(m)
-
+	var t *template.Template
+	t = template.New("layout")
+	t, _ = template.ParseFiles(files...)
+	t.ExecuteTemplate(w, "layout", patient)
 }
 
 /**
@@ -137,12 +128,14 @@ func adminIndex(w http.ResponseWriter, r *http.Request) {
 	user, _ := data.UserById(sess.UserId)
 	fmt.Println(user)
 
-	patients, _ := data.Patients()
+	patients, err := data.Patients()
+	fmt.Println(err)
 
 	files := []string{"templates/layout.html", "templates/admin.index.html", "templates/admin.patient_index.html"}
 
 	var t *template.Template
 	t = template.New("layout")
-	t, _ = template.ParseFiles(files...)
+	t, err = template.ParseFiles(files...)
+	fmt.Println(err)
 	t.ExecuteTemplate(w, "layout", patients)
 }
