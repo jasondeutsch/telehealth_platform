@@ -11,6 +11,8 @@ func main() {
 	loadConfig()
 	r := mux.NewRouter()
 
+	r.HandleFunc("/login", login)
+
 	r.HandleFunc("/patient", indexPatient).Methods("GET")
 	r.HandleFunc("/patient/show", showPatient).Methods("POST").Headers("Content-Type", "application/json")
 	r.HandleFunc("/patient/create", createPatient).Methods("POST").Headers("Content-Type", "application/json")

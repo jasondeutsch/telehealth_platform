@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jasondeutsch/previ/data"
+	"html/template"
 	"net/http"
 )
 
@@ -15,6 +16,18 @@ type authReponse struct {
 type AuthRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+//Get
+// /login
+
+func login(w http.ResponseWriter, r *http.Request) {
+	files := []string{"templates/layout.html", "templates/login.html"}
+
+	var t *template.Template
+	t = template.New("layout")
+	t, _ = template.ParseFiles(files...)
+	t.ExecuteTemplate(w, "layout", nil)
 }
 
 // POST
