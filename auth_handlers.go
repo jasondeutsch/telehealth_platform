@@ -34,32 +34,13 @@ func login(w http.ResponseWriter, r *http.Request) {
 // /auth
 func authenticate(w http.ResponseWriter, r *http.Request) {
 
-	// Prepare the JSON response
-	m := map[string]interface{}{}
+	r.ParseForm()
 
-	currentRequest := AuthRequest{}
+	user, _ := data.UserByEmail(r.PostFormValue("email"))
 
-	err := json.NewDecoder(r.Body).Decode(&currentRequest)
+	if user.Password == data.Encrypt(r.PostFormValue("password")) {
 
-	if err != nil {
-
-		w.WriteHeader(http.StatusBadRequest)
-
-		m["error"] = true
-		m["message"] = "Could not understand request"
-		m["data"] = nil
-	}
-
-	user, _ := data.UserByEmail(currentRequest.Email)
-
-	w.Header().Set("Content-Type", "application/json")
-
-	if user.Password == data.Encrypt(currentRequest.Password) {
-
-		sess, err := user.CreateSession()
-		if err != nil {
-			// do stuff
-		}
+		sess, _ := user.CreateSession()
 
 		cookie := http.Cookie{
 			Name:     "_cookie",
@@ -67,23 +48,11 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 			HttpOnly: true,
 		}
 		http.SetCookie(w, &cookie)
-
-		m["error"] = err != nil
-		m["message"] = "authorized"
-		m["data"] = nil
-
+		http.Redirect(w, r, "/", 302)
+		return
 	} else {
-
-		w.WriteHeader(http.StatusUnauthorized)
-
-		m["error"] = true
-		m["message"] = "authorization failed"
-		m["data"] = nil
-
+		http.Redirect(w, r, "/login", 302)
 	}
-
-	json.NewEncoder(w).Encode(m)
-
 }
 
 // POST

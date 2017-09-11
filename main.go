@@ -11,6 +11,7 @@ func main() {
 	loadConfig()
 	r := mux.NewRouter()
 
+	r.HandleFunc("/", index)
 	r.HandleFunc("/login", login)
 
 	r.HandleFunc("/patient", indexPatient).Methods("GET")
@@ -22,7 +23,7 @@ func main() {
 
 	//Auth API
 	r.HandleFunc("/signup", signup).Methods("POST").Headers("Content-Type", "application/json")
-	r.HandleFunc("/auth", authenticate).Methods("POST").Headers("Content-Type", "application/json")
+	r.HandleFunc("/auth", authenticate).Methods("POST")
 	r.HandleFunc("/logout", logout).Methods("DELETE")
 
 	// Prefer white list domains with cors.New().Options({AllowedOrigins...})

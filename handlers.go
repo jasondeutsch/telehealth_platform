@@ -13,6 +13,15 @@ Patients Resource
 
 **/
 
+func index(w http.ResponseWriter, r *http.Request) {
+	sess, err := session(w, r)
+	if err != nil {
+
+		fmt.Println(sess)
+		http.Redirect(w, r, "/login", 401)
+	}
+}
+
 func indexPatient(w http.ResponseWriter, r *http.Request) {
 
 	// TODO Check if user is admin.
