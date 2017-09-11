@@ -1,0 +1,20 @@
+{{ define "patient_index" }} 
+   <h2>Patients</h2>
+   <table>
+     <tr>
+       <td>First Name</td>
+       <td>Last Name</td>
+       <td>State</td>
+       <td>Country</td>
+     </tr>
+   {{range .}}
+     <tr>
+       <td>{{.First_Name}}</td>
+       <td>{{.Last_Name}}</td>
+       <td>{{.State}}</td>
+       <td>{{.Country}}</td>
+       <td><a href="patient/{{.Id}}">view</a></td>
+     </tr>
+   {{ end }} 
+   </table>
+{{end}}

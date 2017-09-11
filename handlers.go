@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jasondeutsch/previ/data"
+	"html/template"
 	"net/http"
 )
 
@@ -123,4 +124,25 @@ func indexProvider(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(m)
 
+}
+
+/**
+
+Admin Resource
+
+**/
+
+func adminIndex(w http.ResponseWriter, r *http.Request) {
+	sess, _ := session(w, r)
+	user, _ := data.UserById(sess.UserId)
+	fmt.Println(user)
+
+	patients, _ := data.Patients()
+
+	files := []string{"templates/layout.html", "templates/admin.index.html", "templates/admin.patient_index.html"}
+
+	var t *template.Template
+	t = template.New("layout")
+	t, _ = template.ParseFiles(files...)
+	t.ExecuteTemplate(w, "layout", patients)
 }
