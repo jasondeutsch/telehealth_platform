@@ -87,8 +87,6 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	if err != http.ErrNoCookie {
 		sess.Delete()
 	}
+	http.Redirect(w, r, "/login", 302)
 
-	w.Header().Set("Content-Type", "application/json")
-	m := map[string]interface{}{"error": err != nil, "message": "session deleted", "data": nil}
-	json.NewEncoder(w).Encode(m)
 }
