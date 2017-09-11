@@ -8,16 +8,6 @@ import (
 	"net/http"
 )
 
-type authReponse struct {
-	status  string
-	message string
-}
-
-type AuthRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 //Get
 // /login
 
@@ -55,23 +45,36 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// POST
+// GET
 // /signup
 func signup(w http.ResponseWriter, r *http.Request) {
-	var user *data.User
+	files := []string{"templates/layout.html", "templates/signup.html"}
 
-	err := json.NewDecoder(r.Body).Decode(&user)
+	var t *template.Template
+	t = template.New("layout")
+	t, _ = template.ParseFiles(files...)
+	t.ExecuteTemplate(w, "layout", nil)
+
+}
+
+// POST
+// /signupaccount
+func signupAccount(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	user := data.User{
+		Email:    r.PostFormValue("email"),
+		Password: data.Encrypt(r.PostFormValue("password")),
+	}
+	err := user.Create()
+
 	if err != nil {
-		return
+		fmt.Println(err)
+		http.Redirect(w, r, "/signup", 302)
+	} else {
+		http.Redirect(w, r, "/login", 302)
 	}
 
-	err = user.Create()
-
-	m := map[string]interface{}{"error": err != nil, "message": "", "data": ""}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(m)
 }
 
 // POST
