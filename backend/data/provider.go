@@ -56,7 +56,7 @@ func (p *Provider) Create(user User) (err error) {
 }
 
 // Get Provider By Id
-func ProviderById(id string) (p Provider, err error) {
+func ProviderById(id int) (p Provider, err error) {
 	statement := "select id, first_name, last_name, phone_number, vidyo_room, credential from provider where id=$1"
 	stmt, err := Db.Prepare(statement)
 

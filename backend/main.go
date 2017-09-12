@@ -12,12 +12,13 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/patient", indexPatient).Methods("GET")
-	r.HandleFunc("/patient/show", showPatient).Methods("POST").Headers("Content-Type", "application/json")
+	r.HandleFunc("/patient/show", showPatient).Methods("GET").Headers("Content-Type", "application/json")
 	r.HandleFunc("/patient/create", createPatient).Methods("POST").Headers("Content-Type", "application/json")
 
 	r.HandleFunc("/provider", indexProvider).Methods("GET")
-	r.HandleFunc("/provider/show", showProvider).Methods("POST").Headers("Content-Type", "application/json")
+	r.HandleFunc("/provider/show", showProvider).Methods("GET").Headers("Content-Type", "application/json")
 	r.HandleFunc("/provider/create", createProvider).Methods("POST").Headers("Content-Type", "application/json")
+	r.HandleFunc("/provider/patients", providerPatientsIndex).Methods("GET")
 
 	//Auth API
 	r.HandleFunc("/signup", signup).Methods("POST").Headers("Content-Type", "application/json")

@@ -14,11 +14,9 @@ Patients Resource
 **/
 
 func indexPatient(w http.ResponseWriter, r *http.Request) {
-
 	// TODO Check if user is admin.
 	// If user is admin then show all patients.
 	// TODO Handle errors
-
 	patients, err := data.Patients()
 
 	m := map[string]interface{}{"error": err != nil, "message": "", "data": patients}
@@ -29,7 +27,6 @@ func indexPatient(w http.ResponseWriter, r *http.Request) {
 }
 
 func createPatient(w http.ResponseWriter, r *http.Request) {
-
 	sess, err := session(w, r)
 
 	user, _ := data.UserById(sess.UserId)
@@ -44,13 +41,10 @@ func createPatient(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(m)
-
 }
 
 func showPatient(w http.ResponseWriter, r *http.Request) {
-
 	// TODO authorization
-
 	sess, err := session(w, r)
 	user, _ := sess.User()
 
@@ -120,7 +114,7 @@ func showProvider(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(sess)
 
 	type requestId struct {
-		Id string
+		Id int
 	}
 
 	var rId *requestId
@@ -131,6 +125,18 @@ func showProvider(w http.ResponseWriter, r *http.Request) {
 	m := map[string]interface{}{"error": err != nil, "message": "", "data": provider}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+}
+
+func providerPatientsIndex(w http.ResponseWriter, r *http.Request) {
+	sess, _ := session(w, r)
+	provider, err := data.ProviderById(sess.UserId)
+	patients, err := provider.Patients()
+
+	m := map[string]interface{}{"error": err != nil, "message": "", "data": patients}
+
+	w.Header().Set("Contnet-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(m)
 }
