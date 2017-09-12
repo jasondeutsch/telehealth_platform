@@ -1,7 +1,6 @@
 package data
 
 import (
-	"github.com/lib/pq"
 	"github.com/satori/go.uuid"
 	"time"
 )
@@ -102,7 +101,7 @@ func (user *User) Create() (err error) {
 func UserByEmail(email string) (user User, err error) {
 	user = User{}
 	statement := "select id, email, password, disabled, created_at, role from user_account where email = $1"
-	err = Db.QueryRow(statement, email).Scan(&user.Id, &user.Email, &user.Password, &user.Disabled, &user.CreatedAt, pq.Array(&user.Role))
+	err = Db.QueryRow(statement, email).Scan(&user.Id, &user.Email, &user.Password, &user.Disabled, &user.CreatedAt, &user.Role)
 
 	return
 }
@@ -111,7 +110,7 @@ func UserByEmail(email string) (user User, err error) {
 func UserById(id int) (user User, err error) {
 	user = User{}
 	statement := "select id, email, disabled, role from user_account where id = $1"
-	err = Db.QueryRow(statement, id).Scan(&user.Id, &user.Email, &user.Disabled, pq.Array(&user.Role))
+	err = Db.QueryRow(statement, id).Scan(&user.Id, &user.Email, &user.Disabled, &user.Role)
 
 	return
 }
@@ -132,7 +131,7 @@ func (user *User) Disable() (err error) {
 
 // Set role: Patient Provider Admin
 func (user *User) SetRole(role string) (err error) {
-	statement := "update user_account set role=array_append(role, $2) where id=$1"
+	statement := "update user_account set role=$2 where id=$1"
 	stmt, err := Db.Prepare(statement)
 
 	defer stmt.Close()
