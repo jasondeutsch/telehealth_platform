@@ -4,7 +4,7 @@ create table user_account(
   password      text, 
   disabled      bool default false,
   confirmed     bool default false, 
-  role          text[],
+  role          text,
   created_at    timestamp default current_timestamp
 );
 
