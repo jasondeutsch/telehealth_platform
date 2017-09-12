@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"github.com/jasondeutsch/previ/data"
 	"log"
 	"net/http"
@@ -43,7 +43,7 @@ func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err err
 	ok, _ := sess.Check()
 
 	if !ok {
-		fmt.Println("session not valid")
+		err = errors.New("session not valid")
 	}
 
 	return

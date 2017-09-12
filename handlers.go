@@ -100,21 +100,37 @@ func createProvider(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(m)
 }
 
+/*
 func indexProvider(w http.ResponseWriter, r *http.Request) {
 	sess, _ := session(w, r)
 
 	fmt.Println(sess)
 
 	providers, err := data.Providers()
-	fmt.Println(err)
 	fmt.Println(providers)
 
-	m := map[string]interface{}{"error": err != nil, "message": "", "data": providers}
+	files := []string{"templates/layout.html","templates/providers.html"}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(m)
+	var t *template.Template
+	t = template.New("layout")
+	t, _ = template.ParseFiles(files...)
+	t.ExecuteTemplate(w, "layout", provider)
 
+}
+*/
+
+func showProvider(w http.ResponseWriter, r *http.Request) {
+	files := []string{"templates/layout.html", "templates/private.provider.html"}
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	provider, _ := data.ProviderById(id)
+
+	var t *template.Template
+	t = template.New("layout")
+	t, _ = template.ParseFiles(files...)
+	t.ExecuteTemplate(w, "layout", provider)
 }
 
 /**
@@ -129,13 +145,15 @@ func adminIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 
 	patients, err := data.Patients()
-	fmt.Println(err)
+	providers, err := data.Providers()
 
-	files := []string{"templates/layout.html", "templates/admin.index.html", "templates/admin.patient_index.html"}
+	data := map[string]interface{}{"patients": patients, "providers": providers}
+
+	files := []string{"templates/layout.html", "templates/admin.index.html", "templates/admin.patient_index.html", "templates/admin.provider_index.html"}
 
 	var t *template.Template
 	t = template.New("layout")
 	t, err = template.ParseFiles(files...)
 	fmt.Println(err)
-	t.ExecuteTemplate(w, "layout", patients)
+	t.ExecuteTemplate(w, "layout", data)
 }

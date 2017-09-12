@@ -1,0 +1,26 @@
+{{ define "provider_index" }}
+  <header>
+    <p>Providers</p>
+  </header>
+   <table class="table is-fullwidth is-striped">
+     <thead>
+       <td>First Name</td>
+       <td>Last Name</td>
+       <td>Phone Number</td>
+       <td>Credentials</td>
+       <td>Actions</td>
+     </thead>
+   {{range .}}
+     <tr> 
+      <td>{{.FirstName}}</td>	
+      <td>{{.LastName}}</td>
+      <td>{{.PhoneNumber}}</td>
+      <td>{{range .Credential}}
+             {{.}}&nbsp;
+	  {{ end }}
+      </td>
+      <td><a href="/admin/providers/{{.Id}}">view</a></td>
+     </tr>
+   {{ end }} 
+   </table>
+{{ end }}

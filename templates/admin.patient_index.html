@@ -1,12 +1,15 @@
 {{ define "patient_index" }} 
-   <h2>Patients</h2>
-   <table>
-     <tr>
+  <header>
+	  <p>Patients</p>
+  </header>
+   <table class="table is-fullwidth is striped">
+     <thead>
        <td>First Name</td>
        <td>Last Name</td>
        <td>State</td>
        <td>Country</td>
-     </tr>
+       <td>Actions</td>
+     </thead>
    {{range .}}
      <tr>
        <td>{{.First_Name}}</td>

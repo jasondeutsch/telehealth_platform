@@ -34,6 +34,12 @@ func Providers() (providers []Provider, err error) {
 	return
 }
 
+// Get Provider by Id
+func ProviderById(id string) (p Provider, err error) {
+	Db.QueryRow("select Id, first_name, last_name, Phone_number, vidyo_room, credential from provider where id = $1", id).Scan(&p.Id, &p.FirstName, &p.LastName, &p.PhoneNumber, &p.VidyoRoom, pq.Array(&p.Credential))
+	return
+}
+
 // Create provider
 func (p *Provider) Create(user User) (err error) {
 	statement := "insert into provider(id, first_name, last_name, phone_number, credential) values($1, $2, $3, $4, $5)"
