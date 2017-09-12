@@ -64,8 +64,6 @@ func showPatient(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&rId)
 
-	fmt.Println(rId.Id)
-
 	patient, err := data.PatientById(rId.Id)
 
 	m := map[string]interface{}{"success": err == nil, "message": "", "data": patient}
@@ -114,4 +112,25 @@ func indexProvider(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(m)
 
+}
+
+func showProvider(w http.ResponseWriter, r *http.Request) {
+	sess, _ := session(w, r)
+
+	fmt.Println(sess)
+
+	type requestId struct {
+		Id string
+	}
+
+	var rId *requestId
+	err := json.NewDecoder(r.Body).Decode(&rId)
+
+	provider, err := data.ProviderById(rId.Id)
+
+	m := map[string]interface{}{"error": err != nil, "message": "", "data": provider}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
 }

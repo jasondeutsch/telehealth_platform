@@ -16,6 +16,7 @@ func main() {
 	r.HandleFunc("/patient/create", createPatient).Methods("POST").Headers("Content-Type", "application/json")
 
 	r.HandleFunc("/provider", indexProvider).Methods("GET")
+	r.HandleFunc("/provider/show", showProvider).Methods("POST").Headers("Content-Type", "application/json")
 	r.HandleFunc("/provider/create", createProvider).Methods("POST").Headers("Content-Type", "application/json")
 
 	//Auth API
