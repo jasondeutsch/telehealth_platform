@@ -5,12 +5,12 @@ import (
 )
 
 type Patient struct {
-	Id         int
-	First_Name string
-	Last_Name  string
-	State      string
-	Country    string
-	Created_At string
+	Id        int
+	FirstName string
+	LastName  string
+	State     string
+	Country   string
+	CreatedAt string
 }
 
 // View all patients
@@ -21,7 +21,7 @@ func Patients() (patients []Patient, err error) {
 	var p Patient
 	patients = []Patient{}
 	for rows.Next() {
-		err = rows.Scan(&p.Id, &p.First_Name, &p.Last_Name, &p.State, &p.Country)
+		err = rows.Scan(&p.Id, &p.FirstName, &p.LastName, &p.State, &p.Country)
 		if err != nil {
 			return
 		}
@@ -38,7 +38,7 @@ func PatientById(id string) (p Patient, err error) {
 	// TODO account for authorization
 	statement := "select first_name, last_name, state, country from patient where id = $1"
 	stmt, err := Db.Prepare(statement)
-	err = stmt.QueryRow(id).Scan(&p.First_Name, &p.Last_Name, &p.State, &p.Country)
+	err = stmt.QueryRow(id).Scan(&p.FirstName, &p.LastName, &p.State, &p.Country)
 
 	return
 
@@ -56,7 +56,7 @@ func (patient *Patient) Create(user User) (err error) {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(&patient.Id, &patient.First_Name, &patient.Last_Name, &patient.State, &patient.Country, time.Now())
+	_, err = stmt.Exec(&patient.Id, &patient.FirstName, &patient.LastName, &patient.State, &patient.Country, time.Now())
 
 	if err == nil {
 		err = user.SetRole("patient")
