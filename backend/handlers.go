@@ -9,6 +9,8 @@ import (
 	"strconv"
 )
 
+type M map[string]interface{}
+
 /**
 
 Patients Resource
@@ -139,6 +141,27 @@ func providerPatientsIndex(w http.ResponseWriter, r *http.Request) {
 	m := map[string]interface{}{"error": err != nil, "message": "", "data": patients}
 
 	w.Header().Set("Contnet-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+}
+
+func showProviderPatient(w http.ResponseWriter, r *http.Request) {
+	var m M
+
+	sess, err := session(w, r)
+	provider, err := data.ProviderById(sess.UserId)
+
+	vars := mux.Vars(r)
+	id, _ := vars["id"]
+	patientId, _ := strconv.Atoi(id)
+
+	if err = provider.HasPatient(patientId); err != nil {
+		m = M{"error": true, "message": "", "data": nil}
+	} else {
+		patient, err := data.PatientById(patientId)
+		m = M{"error": err != nil, "message": "", "data": patient}
+	}
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(m)
 }

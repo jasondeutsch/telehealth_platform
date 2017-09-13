@@ -20,6 +20,7 @@ func main() {
 	r.HandleFunc("/provider/{id}", showProvider).Methods("GET")
 	r.HandleFunc("/provider/create", createProvider).Methods("POST").Headers("Content-Type", "application/json")
 	r.HandleFunc("/provider/patients", providerPatientsIndex).Methods("GET")
+	r.HandleFunc("/povider/patients/{id}", showProviderPatient).Methods("GET")
 
 	//Auth API
 	r.HandleFunc("/signup", signup).Methods("POST").Headers("Content-Type", "application/json")
