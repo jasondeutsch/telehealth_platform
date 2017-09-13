@@ -118,14 +118,11 @@ func showProvider(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(sess)
 
-	type requestId struct {
-		Id int
-	}
+	vars := mux.Vars(r)
+	sId, _ := vars["id"]
+	id, _ := strconv.Atoi(sId)
 
-	var rId *requestId
-	err := json.NewDecoder(r.Body).Decode(&rId)
-
-	provider, err := data.ProviderById(rId.Id)
+	provider, err := data.ProviderById(id)
 
 	m := map[string]interface{}{"error": err != nil, "message": "", "data": provider}
 

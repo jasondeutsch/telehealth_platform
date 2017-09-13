@@ -17,7 +17,7 @@ func main() {
 	r.HandleFunc("/patient/providers", patientProvidersIndex).Methods("GET")
 
 	r.HandleFunc("/provider", indexProvider).Methods("GET")
-	r.HandleFunc("/provider/show", showProvider).Methods("GET").Headers("Content-Type", "application/json")
+	r.HandleFunc("/provider/{id}", showProvider).Methods("GET")
 	r.HandleFunc("/provider/create", createProvider).Methods("POST").Headers("Content-Type", "application/json")
 	r.HandleFunc("/provider/patients", providerPatientsIndex).Methods("GET")
 
