@@ -51,7 +51,7 @@ func showPatient(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 
 	type requestId struct {
-		Id string
+		Id int
 	}
 
 	var rId *requestId
@@ -66,6 +66,18 @@ func showPatient(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(m)
 
+}
+
+func patientProvidersIndex(w http.ResponseWriter, r *http.Request) {
+	sess, _ := session(w, r)
+	patient, err := data.PatientById(sess.UserId)
+	providers, err := patient.Providers()
+
+	m := map[string]interface{}{"error": err != nil, "message": "", "data": providers}
+
+	w.Header().Set("Contnet-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
 }
 
 /**

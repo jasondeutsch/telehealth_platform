@@ -1,6 +1,7 @@
 package data
 
 import (
+	"github.com/lib/pq"
 	"time"
 )
 
@@ -33,7 +34,7 @@ func Patients() (patients []Patient, err error) {
 }
 
 // Get patient by id
-func PatientById(id string) (p Patient, err error) {
+func PatientById(id int) (p Patient, err error) {
 	// TODO account for invalid lookup
 	// TODO account for authorization
 	statement := "select first_name, last_name, state, country from patient where id = $1"
@@ -62,6 +63,27 @@ func (patient *Patient) Create(user User) (err error) {
 		err = user.SetRole("patient")
 	}
 
+	return
+}
+
+// Get list of providers paired with patient.
+func (patient *Patient) Providers() (providers []Provider, err error) {
+	statement := "select id, first_name, last_name, credential from provider where id in (select provider from pairing where patient = $1)"
+	stmt, err := Db.Prepare(statement)
+
+	defer stmt.Close()
+
+	rows, err := stmt.Query(patient.Id)
+
+	var provider Provider
+
+	for rows.Next() {
+		err = rows.Scan(&provider.Id, &provider.FirstName, &provider.LastName, pq.Array(&provider.Credential))
+		if err != nil {
+			return
+		}
+		providers = append(providers, provider)
+	}
 	return
 }
 
