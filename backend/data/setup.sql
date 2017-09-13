@@ -60,11 +60,16 @@ create table availability(
 );
 
 create table appointment(
-  id         serial primary key,
-  appt_day   date not null,
-  start_time time not null,
-  end_time   time not null,
-  created_at timestamp default current_timestamp
+  id          serial primary key,
+  patinet_id  int refrences patient(id),
+  provider_id int references provider(id),
+  location    text 
+  appt_day    date not null,
+  start_time  time not null,
+  duration    int not null, 
+  cancelled   bool default false,
+  completed   bool default false,
+  created_at  timestamp default current_timestamp
 );
 
 
