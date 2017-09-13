@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/jasondeutsch/previ/backend/data"
 	"net/http"
+	"strconv"
 )
 
 /**
@@ -45,20 +47,11 @@ func createPatient(w http.ResponseWriter, r *http.Request) {
 
 func showPatient(w http.ResponseWriter, r *http.Request) {
 	// TODO authorization
-	sess, err := session(w, r)
-	user, _ := sess.User()
+	vars := mux.Vars(r)
+	sId, _ := vars["id"]
+	id, _ := strconv.Atoi(sId)
 
-	fmt.Println(user)
-
-	type requestId struct {
-		Id int
-	}
-
-	var rId *requestId
-
-	json.NewDecoder(r.Body).Decode(&rId)
-
-	patient, err := data.PatientById(rId.Id)
+	patient, err := data.PatientById(id)
 
 	m := map[string]interface{}{"success": err == nil, "message": "", "data": patient}
 

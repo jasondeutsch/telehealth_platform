@@ -12,7 +12,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/patient", indexPatient).Methods("GET")
-	r.HandleFunc("/patient/show", showPatient).Methods("GET").Headers("Content-Type", "application/json")
+	r.HandleFunc("/patient/{id}", showPatient).Methods("GET")
 	r.HandleFunc("/patient/create", createPatient).Methods("POST").Headers("Content-Type", "application/json")
 	r.HandleFunc("/patient/providers", patientProvidersIndex).Methods("GET")
 
