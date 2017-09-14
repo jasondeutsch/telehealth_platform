@@ -5,15 +5,15 @@ import (
 )
 
 type Appointment struct {
-	Id        int
-	Patient   int
-	Provider  int
-	Location  string
-	Day       int
-	StartTime time.Time
-	Duration  int
-	Cancelled bool
-	Completed bool
+	Id        int       `json:"id"`
+	Patient   int       `json:"patient"`
+	Provider  int       `json:"provider"`
+	Location  string    `json:"location"`
+	Day       int       `json:"day"`
+	StartTime time.Time `json:"start_time"`
+	Duration  int       `json:"duration"`
+	Cancelled bool      `json:"cancelled"`
+	Completed bool      `json:"completed"`
 }
 
 func (a *Appointment) Create() (err error) {
@@ -61,6 +61,6 @@ func (a *Appointment) Cancel() (err error) {
 }
 
 func (a *Appointment) Complete() (err error) {
-	_, err = Db.Exec("update appointment set completed = true where id = $1", a.Id)
+	_, err = Db.Exec("update appointent set completed = true where id = $1", a.Id)
 	return
 }

@@ -67,8 +67,8 @@ create table appointment(
   appt_day    date not null,
   start_time  time not null,
   duration    int not null, 
-  cancelled   bool default false,
-  completed   bool default false,
+  cancelled   bool not null default false,
+  completed   bool not null default false,
   created_at  timestamp default current_timestamp
 );
 
