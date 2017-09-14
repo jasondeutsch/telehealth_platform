@@ -21,12 +21,13 @@ func main() {
 	r.HandleFunc("/provider/create", createProvider).Methods("POST").Headers("Content-Type", "application/json")
 	r.HandleFunc("/provider/patients", providerPatientsIndex).Methods("GET")
 	r.HandleFunc("/provider/patients/{id}", showProviderPatient).Methods("GET")
-	//r.HandleFunc("/provider/appointments/create", createAppointment).Methods("POST").Headers("Content-Type", "application/json")
-	//r.HandleFunc("/provider/appointments, indexAppointment).Methods("GET")
-	//r.HandleFunc("/provider/appointments/{id}", showAppointment).Methods("GET")
-	//r.HandleFunc("/provider/appointments/{id}/cancel", cancelAppointment).Methods("PUT")
-	//r.HandleFunc("/provider/appointments/{id}/complete", completeAppointment).Methods("PUT")
-	//r.Handlefunc("/provider/appointments/{id}/update", updateAppointment).Methods("POST")
+
+	r.HandleFunc("/provider/appointments", indexAppointment).Methods("GET")
+	r.HandleFunc("/provider/appointments/{id}", showAppointment).Methods("GET")
+	r.HandleFunc("/provider/appointments/update", updateAppointment).Methods("POST").Headers("Content_type", "application/json")
+	r.HandleFunc("/provider/appointments/create", createAppointment).Methods("POST").Headers("Content-Type", "application/json")
+	r.HandleFunc("/provider/appointments/{id}/cancel", cancelAppointment).Methods("PUT")
+	r.HandleFunc("/provider/appointments/{id}/complete", completeAppointment).Methods("PUT")
 
 	//Auth API
 	r.HandleFunc("/signup", signup).Methods("POST").Headers("Content-Type", "application/json")

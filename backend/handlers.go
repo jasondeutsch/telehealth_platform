@@ -171,3 +171,101 @@ func showProviderPatient(w http.ResponseWriter, r *http.Request) {
 Appointments Resource
 
 **/
+
+func indexAppointment(w http.ResponseWriter, r *http.Request) {
+	var m M
+	appts, err := data.Appointments()
+
+	m = M{"error": err != nil, "message": "", "data": appts}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+}
+
+func createAppointment(w http.ResponseWriter, r *http.Request) {
+	var m M
+	var appt *data.Appointment
+
+	err := json.NewDecoder(r.Body).Decode(&appt)
+
+	if err = appt.Create(); err != nil {
+		m = M{"error": true, "message": "Unable to create new appointment", "data": nil}
+	} else {
+		m = M{"error": false, "message": "", "data": nil}
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+
+}
+
+func showAppointment(w http.ResponseWriter, r *http.Request) {
+	var m M
+
+	vars := mux.Vars(r)
+	id, _ := vars["id"]
+	apptId, _ := strconv.Atoi(id)
+	appt, err := data.AppointmentById(apptId)
+
+	if err != nil {
+	}
+
+	m = M{"error": err != nil, "message": "", "data": appt}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+}
+
+func completeAppointment(w http.ResponseWriter, r *http.Request) {
+	var m M
+
+	vars := mux.Vars(r)
+	id, _ := vars["id"]
+	apptId, _ := strconv.Atoi(id)
+	appt, _ := data.AppointmentById(apptId)
+	err := appt.Complete()
+
+	if err != nil {
+	}
+
+	m = M{"error": err != nil, "message": "", "data": nil}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+}
+
+func cancelAppointment(w http.ResponseWriter, r *http.Request) {
+	var m M
+
+	vars := mux.Vars(r)
+	id, _ := vars["id"]
+	apptId, _ := strconv.Atoi(id)
+	appt, _ := data.AppointmentById(apptId)
+	err := appt.Cancel()
+
+	if err != nil {
+	}
+
+	m = M{"error": err != nil, "message": "", "data": nil}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+}
+
+func updateAppointment(w http.ResponseWriter, r *http.Request) {
+	var m M
+	var appt *data.Appointment
+	json.NewDecoder(r.Body).Decode(&appt)
+
+	err := appt.Update()
+
+	if err != nil {
+	}
+	m = M{"error": err != nil, "message": "", "data": nil}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(m)
+
+}
