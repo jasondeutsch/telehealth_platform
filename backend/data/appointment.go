@@ -16,6 +16,26 @@ type Appointment struct {
 	Completed bool      `json:"completed"`
 }
 
+func Appointments() (appointments []Appointment, err error) {
+	rows, err := Db.Query("select * from appointment")
+
+	if err != nil {
+		return
+	}
+
+	var a Appointment
+
+	for rows.Next() {
+		rows.Scan(&a.Id, &a.Patient, &a.Provider, &a.Location, &a.Day, &a.StartTime, &a.Duration, &a.Cancelled, &a.Completed)
+
+		if err != nil {
+			return
+		}
+		appointments = append(appointments, a)
+	}
+	return
+}
+
 func (a *Appointment) Create() (err error) {
 	statement := "insert into appointment(patient_id, provider_id, location, appt_day, start_time, duration) values($1, $2, $3, $4, $5)"
 	stmt, err := Db.Prepare(statement)
